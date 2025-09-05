@@ -6,7 +6,7 @@ export default function EventsSection() {
   const [sectionRef, isVisible] = useIntersectionObserver();
 
   const handleWhatsAppClick = () => {
-    const phoneNumber = "50212345678";
+    const phoneNumber = "50238126696";
     const message = encodeURIComponent("¡Hola! 🎉 Me interesa cotizar catering para un evento. ¿Podrían ayudarme con información? Gracias 😊");
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
     

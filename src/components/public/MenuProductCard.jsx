@@ -184,7 +184,7 @@ export default function MenuProductCard({ producto }) {
             ) : (
               <>
                 <ShoppingBagIcon className="w-4 h-4" />
-                <span>Q{(producto.precio * cantidad).toFixed(2)}</span>
+                <span>Agregar</span>
               </>
             )}
           </button>
