@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from 'react';
-import { pedidosService } from '../services/pedidosService';
+import { registrarPedido } from '../services/pedidosService';
 
 const PedidoContext = createContext();
 
@@ -64,7 +64,34 @@ export const PedidoProvider = ({ children }) => {
   };
 
   // Calcular total
-  const total = pedidosService.calcularTotal(carrito);
+  // Función para calcular el total del carrito
+  const calcularTotal = (items) => {
+    return items.reduce((total, item) => total + (item.precio * item.cantidad), 0);
+  };
+
+  // Función para validar datos del cliente  
+  const validarCliente = (clienteData) => {
+    const errores = {};
+    
+    if (!clienteData.nombre?.trim()) {
+      errores.nombre = 'El nombre es requerido';
+    }
+    
+    if (!clienteData.telefono?.trim()) {
+      errores.telefono = 'El teléfono es requerido';
+    }
+    
+    if (!clienteData.direccion?.trim()) {
+      errores.direccion = 'La dirección es requerida';
+    }
+    
+    return {
+      esValido: Object.keys(errores).length === 0,
+      errores
+    };
+  };
+
+  const total = calcularTotal(carrito);
 
   // Procesar pedido
   const procesarPedido = async () => {
@@ -72,7 +99,7 @@ export const PedidoProvider = ({ children }) => {
 
     try {
       // Validar cliente
-      const validacionCliente = pedidosService.validarCliente(cliente);
+      const validacionCliente = validarCliente(cliente);
       if (!validacionCliente.esValido) {
         throw new Error(validacionCliente.errores.join(', '));
       }
@@ -92,7 +119,7 @@ export const PedidoProvider = ({ children }) => {
         observaciones,
       };
 
-      const response = await pedidosService.registrarPedido(datosPedido);
+      const response = await registrarPedido(datosPedido);
 
       if (response.success) {
         // Limpiar estado después del pedido exitoso

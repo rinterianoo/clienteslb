@@ -1,100 +1,144 @@
-import { ENDPOINTS } from '../config/api';
-import { hacerPeticionSegura } from '../utils/apiHelpers';
+import axios from 'axios';
 
-// Servicio para manejar pedidos
-export const pedidosService = {
-  // Registrar un nuevo pedido
-  async registrarPedido(datosPedido) {
-    try {
-      // Validar datos mínimos requeridos
-      if (!datosPedido.cliente || !datosPedido.productos || datosPedido.productos.length === 0) {
-        throw new Error('Datos del pedido incompletos');
-      }
+// Usar la URL directa de producción siempre
+const API_BASE_URL = 'https://prontodelivery.lat';
 
-      // Estructura del pedido en formato JSON
-      const pedido = {
-        cliente: {
-          nombre: datosPedido.cliente.nombre,
-          telefono: datosPedido.cliente.telefono,
-          email: datosPedido.cliente.email,
-          direccion: datosPedido.cliente.direccion,
-        },
-        productos: datosPedido.productos.map(item => ({
-          id: item.id,
-          nombre: item.nombre,
-          precio: item.precio,
-          cantidad: item.cantidad,
-          observaciones: item.observaciones || '',
-        })),
-        total: datosPedido.total,
-        metodo_pago: datosPedido.metodoPago || 'efectivo',
-        tipo_entrega: datosPedido.tipoEntrega || 'domicilio', // domicilio | recogida
-        observaciones: datosPedido.observaciones || '',
-        fecha: new Date().toISOString(),
-      };
+// Función para registrar un pedido
+export async function registrarPedido(datosPedido) {
+  try {
+    console.log('📤 ENVIANDO PEDIDO A LA API:');
+    console.log('🌐 URL:', `${API_BASE_URL}/midelivery/api/registrar_pedido.php`);
+    console.log('📋 Datos a enviar:', JSON.stringify(datosPedido, null, 2));
+    console.log('📊 Tamaño del JSON:', JSON.stringify(datosPedido).length, 'caracteres');
+    
+    const response = await axios.post(`${API_BASE_URL}/midelivery/api/registrar_pedido.php`, datosPedido, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      timeout: 30000, // 30 segundos de timeout
+    });
 
-      const response = await hacerPeticionSegura(ENDPOINTS.REGISTRAR_PEDIDO, pedido);
+    console.log('✅ Respuesta de la API:', response.data);
+    return {
+      success: true,
+      data: response.data,
+      message: 'Pedido registrado exitosamente'
+    };
+
+  } catch (error) {
+    console.error('❌ Error al registrar pedido:', error);
+    
+    let errorMessage = 'Error al procesar el pedido';
+    
+    if (error.response) {
+      // Error de respuesta del servidor
+      console.error('📄 DETALLES COMPLETOS DEL ERROR DEL SERVIDOR:');
+      console.error('Status:', error.response.status);
+      console.error('StatusText:', error.response.statusText);
+      console.error('Headers:', JSON.stringify(error.response.headers, null, 2));
+      console.error('Response Data:', error.response.data);
+      console.error('Response Type:', typeof error.response.data);
       
-      if (response.success) {
-        return {
-          success: true,
-          pedido: response.data,
-          mensaje: 'Pedido registrado exitosamente',
-        };
-      } else {
-        throw new Error(response.error);
+      // Mostrar el texto completo si es HTML de error de PHP
+      if (typeof error.response.data === 'string' && error.response.data.includes('Fatal error')) {
+        console.error('🐛 ERROR DE PHP DETECTADO:', error.response.data);
       }
-    } catch (error) {
-      console.error('Error al registrar pedido:', error);
-      return {
-        success: false,
-        error: error.message || 'Error al procesar el pedido',
-      };
-    }
-  },
-
-  // Calcular el total del pedido
-  calcularTotal(productos) {
-    return productos.reduce((total, item) => {
-      return total + (item.precio * item.cantidad);
-    }, 0);
-  },
-
-  // Validar datos del cliente
-  validarCliente(cliente) {
-    const errores = [];
-
-    if (!cliente.nombre || cliente.nombre.trim().length < 2) {
-      errores.push('El nombre es requerido (mínimo 2 caracteres)');
-    }
-
-    if (!cliente.telefono || cliente.telefono.trim().length < 7) {
-      errores.push('El teléfono es requerido (mínimo 7 dígitos)');
-    }
-
-    if (cliente.email && !/\S+@\S+\.\S+/.test(cliente.email)) {
-      errores.push('El email debe tener un formato válido');
-    }
-
-    if (!cliente.direccion || cliente.direccion.trim().length < 10) {
-      errores.push('La dirección es requerida (mínimo 10 caracteres)');
+      
+      errorMessage = error.response.data?.message || `Error del servidor: ${error.response.status} - ${error.response.statusText}`;
+    } else if (error.request) {
+      // Error de red/conexión
+      console.error('📡 Error de red:', error.request);
+      errorMessage = 'Error de conexión. Verifica tu internet e intenta nuevamente.';
+    } else {
+      // Error de configuración
+      console.error('⚙️ Error de configuración:', error.message);
+      errorMessage = 'Error interno. Intenta nuevamente.';
     }
 
     return {
-      esValido: errores.length === 0,
-      errores,
+      success: false,
+      error: error.response?.data || error.message,
+      message: errorMessage
     };
-  },
+  }
+}
 
-  // Formatear pedido para mostrar
-  formatearPedido(pedido) {
-    return {
-      ...pedido,
-      totalFormateado: new Intl.NumberFormat('es-CO', {
-        style: 'currency',
-        currency: 'COP',
-      }).format(pedido.total),
-      fechaFormateada: new Date(pedido.fecha).toLocaleString('es-CO'),
-    };
-  },
-};
+// Función para calcular el recargo de envío
+export function calcularRecargoEnvio(subtotal) {
+  // Si el subtotal es mayor a Q125, envío gratis
+  if (subtotal > 125.00) {
+    return 0;
+  }
+  
+  // Fórmula: Q25 - (subtotal * 20%)
+  const descuento = subtotal * 0.20;
+  const recargo = 25.00 - descuento;
+  
+  // Redondear hacia arriba al próximo quetzal
+  return Math.ceil(recargo);
+}
+
+// Función para formatear datos del carrito para la API
+export function formatearDatosParaAPI(cartItems, clienteData, metodoPago = "efectivo", tipoEntrega = "delivery") {
+  const productos = cartItems.map(item => ({
+    _id: item.id || item._id || 1, // Usar '_id' como muestra tu ejemplo
+    nombre: item.nombre,
+    precio: parseFloat(item.precio),
+    cantidad: parseInt(item.cantidad),
+    subtotal: parseFloat(item.precio * item.cantidad)
+  }));
+
+  const subtotal = productos.reduce((sum, producto) => sum + producto.subtotal, 0);
+  const recargo = tipoEntrega === 'delivery' ? calcularRecargoEnvio(subtotal) : 0;
+  const total = subtotal + recargo;
+
+  const datosPedido = {
+    cliente: {
+      nombre: clienteData.nombre,
+      telefono: clienteData.telefono,
+      direccion: clienteData.direccion || "",
+      zona: tipoEntrega === 'pickup' ? "Zona 0" : (clienteData.zona || "")
+    },
+    productos,
+    total: parseFloat(total.toFixed(2)),
+    recargo: parseFloat(recargo.toFixed(2)),
+    metodo_pago: metodoPago,
+    tipo_entrega: tipoEntrega  // "delivery" o "pickup"
+  };
+
+  // Agregar datos de facturación si están presentes
+  if (clienteData.nitCf && clienteData.nitCf.trim()) {
+    datosPedido.nit = clienteData.nitCf;
+  }
+  
+  if (clienteData.nombreFacturacion && clienteData.nombreFacturacion.trim()) {
+    datosPedido.nombre_factura = clienteData.nombreFacturacion;
+  }
+
+  // Debug: Mostrar comparación
+  console.log('🔍 FORMATO DE DATOS PARA LA API:');
+  console.log('📋 Datos enviados:', JSON.stringify(datosPedido, null, 2));
+  console.log('📋 Estructura esperada por la API:');
+  console.log(`{
+    "cliente": {
+      "nombre": "${clienteData.nombre}",
+      "telefono": "${clienteData.telefono}",
+      "direccion": "${clienteData.direccion || ''}",
+      "zona": "${clienteData.zona || ''}"
+    },
+    "productos": [${productos.map(p => `{
+      "id_producto": ${p.id_producto},
+      "nombre": "${p.nombre}",
+      "precio": ${p.precio},
+      "cantidad": ${p.cantidad},
+      "subtotal": ${p.subtotal}
+    }`).join(',\n    ')}],
+    "total": ${total},
+    "recargo": ${recargo},
+    "metodo_pago": "${metodoPago}",
+    "tipo_entrega": "${tipoEntrega}"${clienteData.nitCf ? `,\n    "nit": "${clienteData.nitCf}"` : ''}${clienteData.nombreFacturacion ? `,\n    "nombre_factura": "${clienteData.nombreFacturacion}"` : ''}
+  }`);
+
+  return datosPedido;
+}
