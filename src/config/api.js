@@ -10,7 +10,7 @@ const DEVELOPMENT_CONFIG = {
 
 // 🚀 PRODUCCIÓN (servidor real)
 const PRODUCTION_CONFIG = {
-  API_BASE: "https://prontodelivery.lat/midelivery/api",
+  API_BASE: "http://prontodelivery.lat/api",
   ENVIRONMENT: "production"
 };
 
