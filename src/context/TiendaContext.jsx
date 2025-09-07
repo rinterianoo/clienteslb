@@ -26,7 +26,7 @@ export const TIENDAS = [
     features: ['Parqueo Amplio', 'Terraza', 'WiFi', 'Ambiente Familiar']
   },
   {
-    id_restaurante: 3, // Usamos el restaurante "Fresas" para Cayalá (para tener menús diferentes)
+    id_restaurante: 2, // Corregido: La Berraquera Cayibel
     nombre: 'La Berraquera Cayalá',
     key: 'cayala',
     direccion: 'Boulevard Austriaco 35-70 Local 103 Cayalá, Cayibel, Mercado Gastronómico',
