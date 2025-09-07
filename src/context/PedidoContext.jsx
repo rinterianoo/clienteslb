@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from 'react';
-import { registrarPedido } from '../services/pedidosService';
+import { registrarPedido, formatearDatosParaAPI } from '../services/pedidosService';
 
 const PedidoContext = createContext();
 
@@ -109,15 +109,14 @@ export const PedidoProvider = ({ children }) => {
         throw new Error('El carrito está vacío');
       }
 
-      // Crear pedido
-      const datosPedido = {
-        cliente,
-        productos: carrito,
-        total,
-        metodoPago,
-        tipoEntrega,
-        observaciones,
-      };
+      // Crear pedido usando el formateo correcto
+      const datosPedido = formatearDatosParaAPI(
+        carrito, 
+        cliente, 
+        metodoPago, 
+        tipoEntrega, 
+        observaciones
+      );
 
       const response = await registrarPedido(datosPedido);
 

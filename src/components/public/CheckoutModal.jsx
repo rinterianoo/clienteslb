@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useCart } from '../../context/CartContext';
 import { registrarPedido, formatearDatosParaAPI } from '../../services/pedidosService';
 import { useShippingCalculation, getMensajePromoEnvio } from '../../hooks/useShipping';
-import { XMarkIcon, UserIcon, PhoneIcon, MapPinIcon, CreditCardIcon, TruckIcon, CheckIcon, HomeIcon, BuildingOfficeIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon, UserIcon, PhoneIcon, MapPinIcon, CreditCardIcon, TruckIcon, CheckIcon, HomeIcon, BuildingOfficeIcon, ChatBubbleLeftEllipsisIcon } from '@heroicons/react/24/outline';
 
 // ⚠️ CONFIGURACIÓN DE ZONAS - EDITA AQUÍ PARA CAMBIAR LAS ZONAS DE COBERTURA ⚠️
 const ZONAS_COBERTURA = [
@@ -48,6 +48,7 @@ export default function CheckoutModal({ isOpen, onClose }) {
     direccion: '',
     telefono: '',
     metodoPago: 'efectivo',
+    notas: '', // Campo para comentarios adicionales
     
     // Datos de facturación
     nitCf: '',
@@ -134,7 +135,8 @@ export default function CheckoutModal({ isOpen, onClose }) {
         cartItems,
         formData,
         formData.metodoPago,
-        formData.tipoEntrega
+        formData.tipoEntrega,
+        formData.notas // Agregar las notas al pedido
       );
 
       console.log('📦 Enviando pedido:', datosParaAPI);
@@ -158,6 +160,7 @@ export default function CheckoutModal({ isOpen, onClose }) {
             direccion: '',
             telefono: '',
             metodoPago: 'efectivo',
+            notas: '', // Resetear también las notas
             nitCf: '',
             nombreFacturacion: ''
           });
@@ -382,6 +385,26 @@ export default function CheckoutModal({ isOpen, onClose }) {
                     ))}
                   </select>
                   {errores.metodoPago && <p className="text-red-500 text-sm mt-1">{errores.metodoPago}</p>}
+                </div>
+
+                {/* Comentarios/Notas adicionales */}
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                    <ChatBubbleLeftEllipsisIcon className="w-4 h-4 mr-2 text-orange-500" />
+                    Comentarios adicionales <span className="text-gray-500 ml-1">(opcional)</span>
+                  </label>
+                  <textarea
+                    name="notas"
+                    value={formData.notas}
+                    onChange={handleInputChange}
+                    rows={3}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize-none"
+                    placeholder="Ejemplo: Sin cebolla, sin picante, punto de cocción, etc..."
+                    maxLength={200}
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    {formData.notas.length}/200 caracteres
+                  </p>
                 </div>
               </div>
             </div>

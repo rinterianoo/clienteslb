@@ -4,7 +4,26 @@ import ProductCard from "./ProductCard";
 import { useIntersectionObserver } from '../../hooks/useIntersectionObserver';
 
 export default function FeaturedProducts() {
-  const { productos, loading, error } = useMenu();
+  console.log('🎯 FeaturedProducts - Componente renderizándose');
+  
+  let productos = [];
+  let loading = true;
+  let error = null;
+  
+  try {
+    const menuContext = useMenu();
+    productos = menuContext.productos;
+    loading = menuContext.loading;
+    error = menuContext.error;
+    console.log('🎯 FeaturedProducts - Context obtenido correctamente:', { productos: productos.length, loading, error });
+  } catch (contextError) {
+    console.error('🎯 FeaturedProducts - Error al obtener context:', contextError);
+    console.log('🎯 FeaturedProducts - Usando valores por defecto');
+    productos = [];
+    loading = false;
+    error = 'Context no disponible';
+  }
+  
   const [sectionRef, isVisible] = useIntersectionObserver();
 
   // Mostrar solo los primeros 4 productos

@@ -1,17 +1,16 @@
 import axios from 'axios';
-
-// Usar la URL directa de producción siempre
-const API_BASE_URL = 'https://prontodelivery.lat';
+import { getTiendaSeleccionada } from '../utils/tiendaHelpers';
+import { ENDPOINTS, ENVIRONMENT } from '../config/api';
 
 // Función para registrar un pedido
 export async function registrarPedido(datosPedido) {
   try {
-    console.log('📤 ENVIANDO PEDIDO A LA API:');
-    console.log('🌐 URL:', `${API_BASE_URL}/midelivery/api/registrar_pedido.php`);
+    console.log(`📤 ENVIANDO PEDIDO A LA API [${ENVIRONMENT}]:`);
+    console.log(`📤 URL: ${ENDPOINTS.REGISTRAR_PEDIDO}`);
     console.log('📋 Datos a enviar:', JSON.stringify(datosPedido, null, 2));
     console.log('📊 Tamaño del JSON:', JSON.stringify(datosPedido).length, 'caracteres');
     
-    const response = await axios.post(`${API_BASE_URL}/midelivery/api/registrar_pedido.php`, datosPedido, {
+    const response = await axios.post(ENDPOINTS.REGISTRAR_PEDIDO, datosPedido, {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
@@ -80,9 +79,11 @@ export function calcularRecargoEnvio(subtotal) {
 }
 
 // Función para formatear datos del carrito para la API
-export function formatearDatosParaAPI(cartItems, clienteData, metodoPago = "efectivo", tipoEntrega = "delivery") {
+export function formatearDatosParaAPI(cartItems, clienteData, metodoPago = "efectivo", tipoEntrega = "delivery", notas = "") {
+  console.log('📝 Notas recibidas para el pedido:', notas);
+  
   const productos = cartItems.map(item => ({
-    _id: item.id || item._id || 1, // Usar '_id' como muestra tu ejemplo
+    id_producto: item.id || item._id || 1,
     nombre: item.nombre,
     precio: parseFloat(item.precio),
     cantidad: parseInt(item.cantidad),
@@ -93,7 +94,12 @@ export function formatearDatosParaAPI(cartItems, clienteData, metodoPago = "efec
   const recargo = tipoEntrega === 'delivery' ? calcularRecargoEnvio(subtotal) : 0;
   const total = subtotal + recargo;
 
+  // Obtener id_restaurante de la tienda seleccionada
+  const tienda = getTiendaSeleccionada();
+  const restaurant_id = tienda?.id_restaurante || 1;
+
   const datosPedido = {
+    restaurant_id,
     cliente: {
       nombre: clienteData.nombre,
       telefono: clienteData.telefono,
@@ -107,6 +113,11 @@ export function formatearDatosParaAPI(cartItems, clienteData, metodoPago = "efec
     tipo_entrega: tipoEntrega  // "delivery" o "pickup"
   };
 
+  // Agregar notas si están presentes
+  if (notas && notas.trim()) {
+    datosPedido.notas = notas.trim();
+  }
+
   // Agregar datos de facturación si están presentes
   if (clienteData.nitCf && clienteData.nitCf.trim()) {
     datosPedido.nit = clienteData.nitCf;
@@ -116,29 +127,9 @@ export function formatearDatosParaAPI(cartItems, clienteData, metodoPago = "efec
     datosPedido.nombre_factura = clienteData.nombreFacturacion;
   }
 
-  // Debug: Mostrar comparación
-  console.log('🔍 FORMATO DE DATOS PARA LA API:');
-  console.log('📋 Datos enviados:', JSON.stringify(datosPedido, null, 2));
-  console.log('📋 Estructura esperada por la API:');
-  console.log(`{
-    "cliente": {
-      "nombre": "${clienteData.nombre}",
-      "telefono": "${clienteData.telefono}",
-      "direccion": "${clienteData.direccion || ''}",
-      "zona": "${clienteData.zona || ''}"
-    },
-    "productos": [${productos.map(p => `{
-      "id_producto": ${p.id_producto},
-      "nombre": "${p.nombre}",
-      "precio": ${p.precio},
-      "cantidad": ${p.cantidad},
-      "subtotal": ${p.subtotal}
-    }`).join(',\n    ')}],
-    "total": ${total},
-    "recargo": ${recargo},
-    "metodo_pago": "${metodoPago}",
-    "tipo_entrega": "${tipoEntrega}"${clienteData.nitCf ? `,\n    "nit": "${clienteData.nitCf}"` : ''}${clienteData.nombreFacturacion ? `,\n    "nombre_factura": "${clienteData.nombreFacturacion}"` : ''}
-  }`);
+  // Debug: Mostrar datos finales
+  console.log('🔍 DATOS FINALES PARA LA API:');
+  console.log('📋 JSON enviado:', JSON.stringify(datosPedido, null, 2));
 
   return datosPedido;
 }

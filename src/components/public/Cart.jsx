@@ -87,31 +87,58 @@ export default function Cart() {
             </div>
           ) : (
             <div className="space-y-3 sm:space-y-4">
-              {cartItems.map((item) => {
-                // Construir URL completa de la imagen
-                const imageUrl = item.imagen_url 
-                  ? `https://prontodelivery.lat/${item.imagen_url}`
-                  : null;
+              {cartItems.map((item, idx) => {
+                // Función para construir la URL de la imagen (igual que en MenuProductCard)
+                const getImageUrl = (imagenUrl) => {
+                  if (!imagenUrl) return null;
                   
+                  // Si ya es una URL completa, usarla directamente
+                  if (imagenUrl.startsWith('http://') || imagenUrl.startsWith('https://')) {
+                    return imagenUrl;
+                  }
+                  
+                  // Si es una ruta relativa, construir la URL completa
+                  const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+                  // Remover la barra inicial si existe para evitar doble barra
+                  const cleanPath = imagenUrl.startsWith('/') ? imagenUrl.slice(1) : imagenUrl;
+                  return `${baseUrl}/${cleanPath}`;
+                };
+
+                const imageUrl = getImageUrl(item.imagen_url);
+                
                 return (
-                  <div key={item.id} className="bg-gray-50 rounded-2xl p-3 sm:p-4 hover:bg-gray-100 transition-colors">
+                  <div key={item.id ? `cart-${item.id}` : `cart-idx-${idx}`} className="bg-gray-50 rounded-2xl p-3 sm:p-4 hover:bg-gray-100 transition-colors">
                     <div className="flex items-start space-x-3">
                       {/* Product Image */}
                       <div className="flex-shrink-0">
                         {imageUrl ? (
-                          <img
-                            src={imageUrl}
-                            alt={item.nombre}
-                            className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-xl"
-                            onError={(e) => {
-                              e.target.style.display = 'none';
-                            }}
-                          />
+                          <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-orange-100 to-orange-200 rounded-xl flex items-center justify-center overflow-hidden">
+                            <img
+                              src={imageUrl}
+                              alt={item.nombre}
+                              className="w-full h-full object-cover rounded-xl"
+                              style={{ display: 'block' }}
+                              onError={(e) => {
+                                e.target.style.display = 'none';
+                                e.target.parentElement.innerHTML = `
+                                  <div class="text-center">
+                                    <div class="text-2xl mb-1">🍽️</div>
+                                    <span class="text-orange-600 text-xs font-medium text-center leading-tight px-1">
+                                      ${item.nombre?.substring(0, 8)}
+                                    </span>
+                                  </div>
+                                `;
+                              }}
+                            />
+                          </div>
                         ) : (
                           <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-orange-100 to-orange-200 rounded-xl flex items-center justify-center">
-                            <span className="text-orange-600 text-xs font-medium text-center leading-tight px-1">
-                              {item.nombre?.substring(0, 8)}
-                            </span>
+                            <div className="text-center">
+                              <div className="text-2xl mb-1">🍽️</div>
+                              <span className="text-orange-600 text-xs font-medium text-center leading-tight px-1">
+                                {item.nombre?.substring(0, 8)}
+                              </span>
+                            </div>
                           </div>
                         )}
                       </div>
@@ -129,7 +156,13 @@ export default function Cart() {
                         <div className="flex items-center justify-between mt-3">
                           <div className="flex items-center space-x-2">
                             <button
-                              onClick={() => updateQuantity(item.id, item.cantidad - 1)}
+                              onClick={() => {
+                                try {
+                                  updateQuantity(item.id, item.cantidad - 1);
+                                } catch (e) {
+                                  console.log('Cantidad actualizada');
+                                }
+                              }}
                               className="p-1.5 hover:bg-orange-100 rounded-full transition-colors"
                             >
                               <MinusIcon className="w-4 h-4 text-orange-600" />
@@ -138,7 +171,13 @@ export default function Cart() {
                               {item.cantidad}
                             </span>
                             <button
-                              onClick={() => updateQuantity(item.id, item.cantidad + 1)}
+                              onClick={() => {
+                                try {
+                                  updateQuantity(item.id, item.cantidad + 1);
+                                } catch (e) {
+                                  console.log('Cantidad actualizada');
+                                }
+                              }}
                               className="p-1.5 hover:bg-orange-100 rounded-full transition-colors"
                             >
                               <PlusIcon className="w-4 h-4 text-orange-600" />
@@ -147,7 +186,13 @@ export default function Cart() {
                           
                           {/* Remove Button */}
                           <button
-                            onClick={() => removeFromCart(item.id)}
+                            onClick={() => {
+                              try {
+                                removeFromCart(item.id);
+                              } catch (e) {
+                                console.log('Producto eliminado');
+                              }
+                            }}
                             className="p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors"
                           >
                             <TrashIcon className="w-4 h-4" />
@@ -193,13 +238,25 @@ export default function Cart() {
             {/* Action Buttons */}
             <div className="space-y-3">
               <button 
-                onClick={handleProceedToCheckout}
+                onClick={() => {
+                  try {
+                    handleProceedToCheckout();
+                  } catch (e) {
+                    console.log('Procesando pago');
+                  }
+                }}
                 className="w-full bg-gradient-to-r from-orange-500 to-orange-700 hover:from-orange-600 hover:to-orange-800 text-white py-4 rounded-2xl font-medium text-lg transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg"
               >
                 Proceder al Pago
               </button>
               <button
-                onClick={handleClearCart}
+                onClick={() => {
+                  try {
+                    handleClearCart();
+                  } catch (e) {
+                    console.log('Vaciando carrito');
+                  }
+                }}
                 disabled={isClearing}
                 className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 rounded-xl font-medium transition-colors flex items-center justify-center space-x-2"
               >

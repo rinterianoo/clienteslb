@@ -26,7 +26,7 @@ export default function LocationsSection() {
       googleMapsUrl: "https://maps.app.goo.gl/8GYwaG2f3QwykLGB7",
       horarios: "Dom - Mié: 12:00 PM - 9:00 PM | Jue: 12:00 PM - 10:00 PM | Vie: 12:00 PM - 11:00 PM | Sáb: 12:00 AM - 12:00 PM",
       embedUrl: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3860.8092864681275!2d-90.4843125!3d14.6099375!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8589a3eb8b08d5a3%3A0xd2cb5384c1972513!2sLa%20Berraquera!5e0!3m2!1ses-419!2sgt!4v1756975636741!5m2!1ses-419!2sgt",
-      features: ["Mercado Gastronómico", "Música Ambiente", "Estacionamiento", "Eventos Especiales"]
+      features: ["Mercado Gastronómico", "Música Ambiente", "Estacionamiento", "Eventos Especiales","Pet Friendly"]
     }
   ];
 
@@ -35,7 +35,7 @@ export default function LocationsSection() {
   };
 
   return (
-    <section ref={sectionRef} className="bg-gradient-to-br from-gray-50 to-white py-12 sm:py-16 lg:py-20 pb-6 sm:pb-8 lg:pb-12">
+    <section id="ubicaciones" ref={sectionRef} className="bg-gradient-to-br from-gray-50 to-white py-12 sm:py-16 lg:py-20 pb-6 sm:pb-8 lg:pb-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className={`text-center transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
@@ -117,11 +117,11 @@ export default function LocationsSection() {
                   Llamar Ahora
                 </a>
                 <a
-                  href="#pedidos"
+                  href="/pedidos"
                   className="border-2 border-white text-white px-6 sm:px-8 py-3 sm:py-4 rounded-2xl font-bold text-lg hover:bg-white hover:text-orange-600 transition-all duration-300 flex items-center"
                 >
                   <UserGroupIcon className="w-5 h-5 mr-2" />
-                  Hacer Pedido
+                  Ver Menú
                 </a>
               </div>
             </div>

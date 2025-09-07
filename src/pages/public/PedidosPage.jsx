@@ -25,7 +25,7 @@ export default function PedidosPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-yellow-50 pt-20 sm:pt-24">
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-yellow-50 pt-14 sm:pt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
           {/* Modern loading skeleton */}
           <div className="animate-pulse space-y-8">
@@ -75,7 +75,7 @@ export default function PedidosPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-yellow-50 pt-20 sm:pt-24">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-yellow-50 pt-14 sm:pt-16">
       {/* Floating Cart Button - Mobile */}
       <button
         onClick={toggleCart}

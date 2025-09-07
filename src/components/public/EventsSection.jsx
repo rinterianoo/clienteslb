@@ -1,6 +1,7 @@
 import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import { CalendarDaysIcon, UserGroupIcon, SparklesIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
 import { HeartIcon } from '@heroicons/react/24/solid';
+import logo from "../../assets/images/logolb.jpg";
 
 export default function EventsSection() {
   const [sectionRef, isVisible] = useIntersectionObserver();
@@ -32,7 +33,7 @@ export default function EventsSection() {
   ];
 
   return (
-    <section className="pt-6 sm:pt-8 lg:pt-12 pb-12 sm:pb-16 lg:pb-24 bg-gradient-to-br from-gray-50 to-white overflow-hidden">
+    <section id="eventos" className="pt-6 sm:pt-8 lg:pt-12 pb-12 sm:pb-16 lg:pb-24 bg-gradient-to-br from-gray-50 to-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div 
           ref={sectionRef}
@@ -56,10 +57,15 @@ export default function EventsSection() {
               ? 'opacity-100 translate-y-0' 
               : 'opacity-0 translate-y-10'
           }`}>
-            <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl text-gray-700 leading-relaxed">
+            <p className="text-lg sm:text-xl lg:text-2xl xl:text-3xl text-gray-700 leading-relaxed flex items-center justify-center flex-wrap">
               Sorprende a tus invitados con algo diferente,{" "}
-              <span className="font-bold text-orange-600 bg-orange-50 px-2 py-1 rounded-lg">
+              <span className="font-bold text-orange-600 bg-orange-50 px-2 py-1 rounded-lg flex items-center gap-2">
                 comida tradicional colombiana
+                <img 
+                  src={logo} 
+                  alt="La Berraquera Logo" 
+                  className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-orange-200"
+                />
               </span>
             </p>
           </div>

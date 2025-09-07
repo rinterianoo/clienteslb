@@ -1,6 +1,7 @@
 
 import { Link } from "react-router-dom";
 import fondoImage from "../../assets/images/fondo.jpg";
+import logo from "../../assets/images/logolb.jpg";
 import FeaturedProducts from "../../components/public/FeaturedProducts";
 import LocationsSection from "../../components/public/LocationsSection";
 import EventsSection from "../../components/public/EventsSection";
@@ -8,7 +9,7 @@ import FloatingParticles from "../../components/public/FloatingParticles";
 
 function FrozenProductsSection() {
   return (
-    <section className="py-6 sm:py-8 lg:py-12 bg-gradient-to-br from-orange-50 via-white to-yellow-50">
+    <section id="productos-congelados" className="py-6 sm:py-8 lg:py-12 bg-gradient-to-br from-orange-50 via-white to-yellow-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 text-center">
         {/* Mobile-optimized title with animations */}
         <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-gray-900 mb-3 sm:mb-4 leading-tight animate-fade-in-up">
@@ -38,9 +39,9 @@ function FrozenProductsSection() {
 
 export default function HomePage() {
   return (
-    <div className="w-full overflow-x-hidden pt-16 sm:pt-20">
+    <div className="w-full overflow-x-hidden pt-20 sm:pt-24">
       {/* Hero Section - Mobile First */}
-      <section className="relative flex items-center min-h-screen w-full overflow-hidden -mt-16 sm:-mt-20">
+      <section className="relative flex items-center min-h-screen w-full overflow-hidden -mt-20 sm:-mt-24">
         <img
           src={fondoImage}
           alt="Comida tradicional colombiana"
@@ -58,53 +59,75 @@ export default function HomePage() {
         <FloatingParticles />
         
         {/* Content - Mobile First Layout */}
-        <div className="relative z-10 w-full px-4 sm:px-6 lg:px-8 flex items-center justify-center sm:justify-start">
-          <div className="flex flex-col items-center sm:items-start justify-center max-w-4xl text-center sm:text-left">
-            {/* Mobile badge */}
-            <span className="text-white text-sm sm:text-lg lg:text-xl tracking-wider mb-4 sm:mb-6 drop-shadow-lg uppercase opacity-90 animate-fade-in-up animation-delay-200 ">
-               Abierto para envío y recogida
-            </span>
+        <div className="relative z-10 w-full px-4 sm:px-6 lg:px-8 flex items-center justify-center min-h-screen">
+          <div className="w-full max-w-7xl mx-auto">
             
-            {/* Mobile-optimized title */}
-            <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black text-white drop-shadow-2xl mb-6 sm:mb-8 lg:mb-12 leading-none">
-              <span className="inline-block animate-fade-in-up animation-delay-400">Comida</span>
-              <br className="block sm:hidden" /><span className="sm:hidden"> </span>
-              <span className="inline-block animate-fade-in-up animation-delay-600">Tradicional</span>
-              <br />
-              <span className="inline-block text-yellow-400 animate-fade-in-up animation-delay-800">Colombiana</span>
-            </h1>
-            
-            {/* Mobile CTA button */}
-            <Link
-              to="/pedidos"
-              className="inline-flex items-center justify-center w-full sm:w-auto px-8 sm:px-10 py-4 sm:py-5 bg-gradient-to-r from-orange-500 to-orange-700 hover:from-orange-600 hover:to-orange-800 text-lg sm:text-xl text-white font-medium rounded-2xl shadow-2xl transition-all duration-300 transform hover:scale-105 active:scale-95 animate-fade-in-up animation-delay-1000 min-w-[280px] sm:min-w-0"
-            >
-              <span>Pedir online</span>
-              <svg className="ml-3 w-6 h-6 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </Link>
-            
-            {/* Mobile trust indicators */}
-            <div className="mt-6 sm:mt-8 flex flex-wrap justify-center sm:justify-start gap-4 text-white/80 text-xs sm:text-sm animate-fade-in-up animation-delay-1200">
-              <div className="flex items-center space-x-1">
-                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                <span>Entrega rápida</span>
+            {/* Layout para móvil y desktop */}
+            <div className="flex flex-col lg:flex-row items-center justify-between min-h-screen lg:min-h-[80vh]">
+              
+              {/* Contenido izquierdo - Texto */}
+              <div className="flex flex-col items-center lg:items-start justify-center lg:w-1/2 text-center lg:text-left pt-12 sm:pt-16 lg:pt-0">
+                {/* Mobile badge */}
+                <span className="text-white text-sm sm:text-lg lg:text-xl tracking-wider mb-4 sm:mb-6 drop-shadow-lg uppercase opacity-90 animate-fade-in-up animation-delay-200">
+                   Abierto para envío y recogida
+                </span>
+                
+                {/* Mobile-optimized title */}
+                <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white drop-shadow-2xl mb-6 sm:mb-8 lg:mb-12 leading-none">
+                  <span className="inline-block animate-fade-in-up animation-delay-400">Comida</span>
+                  <br />
+                  <span className="inline-block animate-fade-in-up animation-delay-600">Tradicional</span>
+                  <br />
+                  <span className="inline-block text-yellow-400 animate-fade-in-up animation-delay-800">Colombiana</span>
+                </h1>
+                
+                {/* Mobile CTA button */}
+                <Link
+                  to="/pedidos"
+                  className="inline-flex items-center justify-center w-full sm:w-auto px-8 sm:px-10 py-4 sm:py-5 bg-gradient-to-r from-orange-500 to-orange-700 hover:from-orange-600 hover:to-orange-800 text-lg sm:text-xl text-white font-medium rounded-2xl shadow-2xl transition-all duration-300 transform hover:scale-105 active:scale-95 animate-fade-in-up animation-delay-1000 min-w-[280px] sm:min-w-0"
+                >
+                  <span>Pedir online</span>
+                  <svg className="ml-3 w-6 h-6 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </Link>
+
+                {/* Mobile trust indicators */}
+                <div className="mt-6 sm:mt-8 flex flex-wrap justify-center lg:justify-start gap-4 text-white/80 text-xs sm:text-sm animate-fade-in-up animation-delay-1200">
+                  <div className="flex items-center space-x-1">
+                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                    <span>Entrega rápida</span>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                    <span>Pago seguro</span>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                    <span>Comida fresca</span>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center space-x-1">
-                <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                <span>Pago seguro</span>
+
+              {/* Logo centrado a la derecha - Solo visible en desktop */}
+              <div className="hidden lg:flex lg:w-1/2 items-center justify-center">
+                <div className="relative">
+                  <img 
+                    src={logo} 
+                    alt="La Berraquera Logo" 
+                    className="w-64 h-64 xl:w-80 xl:h-80 rounded-3xl object-cover shadow-2xl animate-fade-in-up animation-delay-1200 hover:scale-105 transition-all duration-500"
+                  />
+                  {/* Efecto de resplandor */}
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-yellow-400/20 to-orange-400/20 animate-pulse"></div>
+                </div>
               </div>
-              <div className="flex items-center space-x-1">
-                <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
-                <span>Comida fresca</span>
-              </div>
+              
             </div>
           </div>
         </div>
         
         {/* Scroll indicator - only on larger screens */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce hidden sm:block">
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce hidden sm:block z-20">
           <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center">
             <div className="w-1 h-3 bg-white/60 rounded-full mt-2 animate-pulse"></div>
           </div>

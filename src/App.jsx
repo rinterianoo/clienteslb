@@ -1,23 +1,32 @@
 
 import Navbar from './components/shared/Navbar';
+import TiendaSelectorModal from './components/shared/TiendaSelectorModal';
 import { Outlet } from 'react-router-dom';
 import { MenuProvider } from './context/MenuContext';
 import { PedidoProvider } from './context/PedidoContext';
 import { CartProvider } from './context/CartContext';
+import { TiendaProvider } from './context/TiendaContext';
 
 export default function App() {
+  console.log('🚀 App - Componente renderizándose');
+  
   return (
-    <MenuProvider>
-      <PedidoProvider>
-        <CartProvider>
-          <div className="min-h-screen bg-gray-50">
-            <Navbar />
-            <main className="relative">
-              <Outlet />
-            </main>
-          </div>
-        </CartProvider>
-      </PedidoProvider>
-    </MenuProvider>
+    <TiendaProvider>
+      {/* Modal de selección de tienda - PRIMERA PRIORIDAD */}
+      <TiendaSelectorModal />
+      
+      <MenuProvider>
+        <PedidoProvider>
+          <CartProvider>
+            <div className="min-h-screen bg-gray-50">
+              <Navbar />
+              <main className="relative">
+                <Outlet />
+              </main>
+            </div>
+          </CartProvider>
+        </PedidoProvider>
+      </MenuProvider>
+    </TiendaProvider>
   );
 }

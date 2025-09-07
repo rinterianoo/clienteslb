@@ -12,6 +12,18 @@ dist
 dist-ssr
 *.local
 
+# Build and production files
+produccion/
+ggggg/
+*.zip
+
+# Favicon files (should be in public folder only)
+android-chrome-*.png
+apple-touch-icon.png
+favicon-*.png
+favicon.ico
+site.webmanifest
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
