@@ -19,8 +19,8 @@ const PRODUCTION_CONFIG = {
 // ========================================
 // Para DESARROLLO: usar DEVELOPMENT_CONFIG
 // Para PRODUCCIÓN: cambiar a PRODUCTION_CONFIG
-const CURRENT_CONFIG = DEVELOPMENT_CONFIG;
-// const CURRENT_CONFIG = PRODUCTION_CONFIG; // ← Descomentar para producción
+// const CURRENT_CONFIG = DEVELOPMENT_CONFIG; // ← Comentar para producción
+const CURRENT_CONFIG = PRODUCTION_CONFIG; // ← Descomentar para producción
 
 // ========================================
 // CONFIGURACIÓN ACTUAL
