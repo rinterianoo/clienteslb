@@ -4,7 +4,7 @@ import { useCart } from '../../context/CartContext';
 import { useMenu } from '../../context/MenuContext';
 import { ENVIRONMENT } from '../../config/api';
 
-export default function ComboSuggestionModal({ isOpen, onClose, arepaProduct }) {
+export default function ComboSuggestionModal({ isOpen, onClose, arepaProduct, cantidad = 1 }) {
   const { addToCart } = useCart();
   const { todosLosProductos } = useMenu();
   const [selectedCombo, setSelectedCombo] = useState(null);
@@ -34,6 +34,15 @@ export default function ComboSuggestionModal({ isOpen, onClose, arepaProduct }) 
     try {
       setIsAdding(true);
       setSelectedCombo(combo.id);
+      
+      // Primero agregar la arepa original
+      const arepaParaCarrito = {
+        ...arepaProduct,
+        cantidad: cantidad
+      };
+      addToCart(arepaParaCarrito, cantidad);
+      
+      // Luego agregar el combo seleccionado
       addToCart(combo, 1);
       
       // Feedback visual
@@ -43,7 +52,7 @@ export default function ComboSuggestionModal({ isOpen, onClose, arepaProduct }) 
         onClose(); // Cerrar modal después de agregar
       }, 800);
     } catch (e) {
-      console.log('Combo agregado');
+      console.log('Arepa y combo agregados');
       setIsAdding(false);
       setSelectedCombo(null);
       onClose();
@@ -51,6 +60,16 @@ export default function ComboSuggestionModal({ isOpen, onClose, arepaProduct }) 
   };
 
   const handleSkip = () => {
+    // Si el usuario no quiere combo, solo agregar la arepa
+    try {
+      const arepaParaCarrito = {
+        ...arepaProduct,
+        cantidad: cantidad
+      };
+      addToCart(arepaParaCarrito, cantidad);
+    } catch (e) {
+      console.log('Solo arepa agregada');
+    }
     onClose();
   };
 

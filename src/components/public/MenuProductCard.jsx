@@ -45,17 +45,20 @@ export default function MenuProductCard({ producto }) {
         return;
       }
       
+      // Verificar si es un producto de la categoría "arepa" para mostrar el modal de combos ANTES de agregar
+      if (producto.categoria && producto.categoria.toLowerCase().includes('arepa')) {
+        setShowComboModal(true);
+        setIsAdding(false); // Reset porque el modal manejará el agregado
+        return;
+      }
+      
+      // Para otros productos que no son arepa ni bandeja paisa, agregar directamente
       const productoParaCarrito = {
         ...producto,
         cantidad: cantidad
       };
       
       addToCart(productoParaCarrito);
-      
-      // Verificar si es un producto de la categoría "arepa" para mostrar el modal de combos
-      if (producto.categoria && producto.categoria.toLowerCase().includes('arepa')) {
-        setShowComboModal(true);
-      }
       
       // Simular una pequeña pausa para mostrar el estado de "agregado"
       setTimeout(() => {
@@ -70,6 +73,9 @@ export default function MenuProductCard({ producto }) {
 
   const handleCloseComboModal = () => {
     setShowComboModal(false);
+    // Resetear el estado después de cerrar el modal
+    setIsAdding(false);
+    setCantidad(1);
   };
 
   const handleCloseBandejaModal = () => {
@@ -270,6 +276,7 @@ export default function MenuProductCard({ producto }) {
         isOpen={showComboModal}
         onClose={handleCloseComboModal}
         arepaProduct={producto}
+        cantidad={cantidad}
       />
 
       {/* Modal de opciones de Bandeja Paisa */}
