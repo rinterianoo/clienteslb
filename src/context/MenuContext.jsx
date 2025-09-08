@@ -6,11 +6,8 @@ const MenuContext = createContext();
 
 export const useMenu = () => {
   const context = useContext(MenuContext);
-  console.log('🍽️ useMenu - Context disponible:', !!context);
-  console.log('🍽️ useMenu - Context value:', context);
   
   if (!context) {
-    console.error('🍽️ useMenu - ERROR: useMenu debe ser usado dentro de MenuProvider');
     throw new Error('useMenu debe ser usado dentro de MenuProvider');
   }
   return context;

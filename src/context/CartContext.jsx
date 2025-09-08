@@ -22,12 +22,13 @@ export function CartProvider({ children }) {
   }, [cartItems]);
 
   const addToCart = (producto, cantidad = 1) => {
+    console.log('🛒 AGREGANDO:', producto.nombre, 'ID:', producto._id);
     setCartItems(prevItems => {
-      const existingItem = prevItems.find(item => item.id === producto.id);
+      const existingItem = prevItems.find(item => item._id === producto._id);
       
       if (existingItem) {
         return prevItems.map(item =>
-          item.id === producto.id
+          item._id === producto._id
             ? { ...item, cantidad: item.cantidad + cantidad }
             : item
         );
@@ -38,7 +39,7 @@ export function CartProvider({ children }) {
   };
 
   const removeFromCart = (productId) => {
-    setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
+    setCartItems(prevItems => prevItems.filter(item => item._id !== productId));
   };
 
   const updateQuantity = (productId, newQuantity) => {
@@ -49,7 +50,7 @@ export function CartProvider({ children }) {
     
     setCartItems(prevItems =>
       prevItems.map(item =>
-        item.id === productId
+        item._id === productId
           ? { ...item, cantidad: newQuantity }
           : item
       )

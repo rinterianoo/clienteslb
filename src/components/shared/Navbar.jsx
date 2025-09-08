@@ -23,10 +23,10 @@ export default function Navbar() {
       {/* Modern floating navbar with new layout */}
       <nav className="fixed top-1 left-1 right-1 sm:top-2 sm:left-2 sm:right-2 z-40 bg-white/95 backdrop-blur-2xl shadow-lg border border-white/30 rounded-lg sm:rounded-xl">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-10 sm:h-12 lg:h-14">
+          <div className="grid grid-cols-3 items-center h-10 sm:h-12 lg:h-14">
             
             {/* Left: Mobile Menu Button */}
-            <div className="flex items-center">
+            <div className="flex items-center justify-start">
               <button
                 onClick={toggleMobileMenu}
                 className="p-2 sm:p-3 text-gray-700 hover:text-orange-600 transition-colors duration-300 rounded-lg sm:rounded-xl hover:bg-orange-50"
@@ -40,23 +40,23 @@ export default function Navbar() {
             </div>
 
             {/* Center: Logo and Restaurant Name */}
-            <Link to="/" className="flex items-center space-x-2 sm:space-x-3 transition-transform duration-300 hover:scale-105 absolute left-1/2 transform -translate-x-1/2">
+            <Link to="/" className="flex items-center justify-center space-x-2 sm:space-x-3 transition-transform duration-300 hover:scale-105">
               <img 
                 src={logo} 
                 alt="Logo LB Restaurant" 
                 className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-full object-cover border-2 border-orange-400"
               />
-              <span className="text-base sm:text-lg lg:text-xl text-black font-medium">
+              <span className="text-sm sm:text-base lg:text-lg text-black font-medium hidden xs:block">
                 La Berraquera
               </span>
             </Link>
 
             {/* Right: Store Selector + Cart Button */}
-            <div className="flex items-center gap-1 sm:gap-2">
+            <div className="flex items-center justify-end gap-1 sm:gap-2">
               {/* Botón para seleccionar/cambiar tienda */}
               <button
                 onClick={abrirModalCambio}
-                className={`relative px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-sm transition-colors duration-300 rounded-lg sm:rounded-xl border ${
+                className={`relative px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm transition-colors duration-300 rounded-lg sm:rounded-xl border ${
                   tienda 
                     ? 'text-gray-700 hover:text-orange-600 hover:bg-orange-50 border-gray-200 hover:border-orange-200' 
                     : 'text-white bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 border-orange-500 animate-pulse'
@@ -64,12 +64,15 @@ export default function Navbar() {
                 title={tienda ? `Cambiar tienda (actual: ${tienda.nombre})` : 'Selecciona tu tienda'}
               >
                 {tienda ? (
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium truncate max-w-16 sm:max-w-24">{tienda.key.toUpperCase()}</span>
+                  <div className="flex items-center gap-1 sm:gap-2">
+                    <span className="font-medium truncate max-w-8 xs:max-w-12 sm:max-w-24">{tienda.key.toUpperCase()}</span>
                     <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                   </div>
                 ) : (
-                  <span className="font-medium">Selecciona tu tienda</span>
+                  <span className="font-medium hidden xs:block">Selecciona tu tienda</span>
+                )}
+                {!tienda && (
+                  <span className="font-medium xs:hidden">📍</span>
                 )}
               </button>
               

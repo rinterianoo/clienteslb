@@ -35,6 +35,11 @@ export default function MenuProductCard({ producto }) {
   };
 
   const handleAddToCart = async () => {
+    // Prevenir múltiples clicks
+    if (isAdding) {
+      return;
+    }
+    
     try {
       setIsAdding(true);
       
@@ -45,10 +50,27 @@ export default function MenuProductCard({ producto }) {
         return;
       }
       
-      // Verificar si es un producto de la categoría "arepa" para mostrar el modal de combos ANTES de agregar
+      // Verificar si es un producto de la categoría "arepa" para mostrar el modal de combos DESPUÉS de agregar
       if (producto.categoria && producto.categoria.toLowerCase().includes('arepa')) {
+        console.log('🥟 AREPA: Agregando arepa al carrito:', producto.nombre, 'ID:', producto._id);
+        
+        // Primero agregar la arepa al carrito
+        const productoParaCarrito = {
+          ...producto,
+          cantidad: cantidad
+        };
+        
+        addToCart(productoParaCarrito);
+        
+        // Luego mostrar el modal de combos
         setShowComboModal(true);
-        setIsAdding(false); // Reset porque el modal manejará el agregado
+        
+        // Simular una pequeña pausa para mostrar el estado de "agregado"
+        setTimeout(() => {
+          setIsAdding(false);
+          setCantidad(1);
+        }, 500);
+        
         return;
       }
       

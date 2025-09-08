@@ -158,7 +158,7 @@ export default function Cart() {
                             <button
                               onClick={() => {
                                 try {
-                                  updateQuantity(item.id, item.cantidad - 1);
+                                  updateQuantity(item._id, item.cantidad - 1);
                                 } catch (e) {
                                   console.log('Cantidad actualizada');
                                 }
@@ -173,7 +173,7 @@ export default function Cart() {
                             <button
                               onClick={() => {
                                 try {
-                                  updateQuantity(item.id, item.cantidad + 1);
+                                  updateQuantity(item._id, item.cantidad + 1);
                                 } catch (e) {
                                   console.log('Cantidad actualizada');
                                 }
@@ -188,7 +188,7 @@ export default function Cart() {
                           <button
                             onClick={() => {
                               try {
-                                removeFromCart(item.id);
+                                removeFromCart(item._id);
                               } catch (e) {
                                 console.log('Producto eliminado');
                               }
