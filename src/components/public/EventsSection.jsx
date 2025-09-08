@@ -2,18 +2,14 @@ import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import { CalendarDaysIcon, UserGroupIcon, SparklesIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
 import { HeartIcon } from '@heroicons/react/24/solid';
 import logo from "../../assets/images/logolb.jpg";
-
 export default function EventsSection() {
   const [sectionRef, isVisible] = useIntersectionObserver();
-
   const handleWhatsAppClick = () => {
     const phoneNumber = "50238126696";
     const message = encodeURIComponent("¡Hola! 🎉 Me interesa cotizar catering para un evento. ¿Podrían ayudarme con información? Gracias 😊");
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
-    
     window.open(whatsappUrl, "_blank");
   };
-
   const eventTypes = [
     {
       icon: UserGroupIcon,
@@ -31,7 +27,6 @@ export default function EventsSection() {
       description: "Graduaciones, cumpleaños y reuniones sociales con un toque especial"
     }
   ];
-
   return (
     <section id="eventos" className="pt-6 sm:pt-8 lg:pt-12 pb-12 sm:pb-16 lg:pb-24 bg-gradient-to-br from-gray-50 to-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -45,12 +40,10 @@ export default function EventsSection() {
         >
           {/* Header */}
           <div className="flex items-center justify-center mb-6">
-           
             <h2 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900">
               Atendemos <span className="text-orange-500">Eventos</span>
             </h2>
           </div>
-          
           {/* Subtitle */}
           <div className={`max-w-4xl mx-auto mb-12 transition-all duration-1000 delay-200 ${
             isVisible 
@@ -61,11 +54,9 @@ export default function EventsSection() {
               Sorprende a tus invitados con algo diferente,{" "}
               <span className="font-bold text-orange-600 bg-orange-50 px-2 py-1 rounded-lg flex items-center gap-2">
                 comida tradicional colombiana
-                
               </span>
             </p>
           </div>
-
           {/* Event Types - Mobile Optimized */}
           <div className={`mb-12 sm:mb-16 transition-all duration-1000 delay-400 ${
             isVisible 
@@ -98,7 +89,6 @@ export default function EventsSection() {
                 );
               })}
             </div>
-
             {/* Desktop: Grid */}
             <div className="hidden lg:grid lg:grid-cols-3 gap-8">
               {eventTypes.map((event, index) => {
@@ -123,7 +113,6 @@ export default function EventsSection() {
               })}
             </div>
           </div>
-
           {/* WhatsApp CTA */}
           <div className={`transition-all duration-1000 delay-600 ${
             isVisible 
@@ -142,7 +131,6 @@ export default function EventsSection() {
                 <p className="text-lg sm:text-xl opacity-90 mb-6 max-w-3xl mx-auto">
                   Te ayudamos a planificar cada detalle con el auténtico sabor colombiano que tanto aman tus invitados
                 </p>
-                
                 <button
                   onClick={handleWhatsAppClick}
                   className="inline-flex items-center px-8 sm:px-12 py-4 sm:py-6 bg-white text-green-600 font-semibold text-lg sm:text-xl rounded-2xl shadow-2xl transition-all duration-300 transform hover:scale-105 active:scale-95 hover:shadow-3xl"
@@ -155,7 +143,6 @@ export default function EventsSection() {
               </div>
             </div>
           </div>
-
           {/* Additional Info */}
           <div className={`transition-all duration-1000 delay-800 ${
             isVisible 

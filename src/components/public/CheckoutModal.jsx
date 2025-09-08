@@ -3,7 +3,6 @@ import { useCart } from '../../context/CartContext';
 import { registrarPedido, formatearDatosParaAPI } from '../../services/pedidosService';
 import { useShippingCalculation, getMensajePromoEnvio } from '../../hooks/useShipping';
 import { XMarkIcon, UserIcon, PhoneIcon, MapPinIcon, CreditCardIcon, TruckIcon, CheckIcon, HomeIcon, BuildingOfficeIcon, ChatBubbleLeftEllipsisIcon } from '@heroicons/react/24/outline';
-
 // ⚠️ CONFIGURACIÓN DE ZONAS - EDITA AQUÍ PARA CAMBIAR LAS ZONAS DE COBERTURA ⚠️
 const ZONAS_COBERTURA = [
   { value: '', label: 'Selecciona una zona' },
@@ -26,20 +25,16 @@ const ZONAS_COBERTURA = [
   { value: 'carretera-salvador', label: 'Carretera a El Salvador' },
   { value: 'otras', label: 'Otras zonas (consultar)' }
 ];
-
 // ⚠️ MÉTODOS DE PAGO DISPONIBLES - EDITA AQUÍ PARA CAMBIAR OPCIONES ⚠️
 const METODOS_PAGO = [
   { value: 'efectivo', label: 'Efectivo', icon: '💵' },
   { value: 'tarjeta', label: 'Tarjeta', icon: '💳' },
-
 ];
-
 export default function CheckoutModal({ isOpen, onClose }) {
   const { cartItems, getCartTotal, clearCart } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
   const [pedidoExitoso, setPedidoExitoso] = useState(false);
   const [error, setError] = useState('');
-
   const [formData, setFormData] = useState({
     // Datos de envío
     tipoEntrega: 'delivery', // delivery | pickup
@@ -49,100 +44,71 @@ export default function CheckoutModal({ isOpen, onClose }) {
     telefono: '',
     metodoPago: 'efectivo',
     notas: '', // Campo para comentarios adicionales
-    
     // Datos de facturación
     nitCf: '',
     nombreFacturacion: ''
   });
-
   const [errores, setErrores] = useState({});
-
   if (!isOpen) return null;
-
   const subtotalCarrito = getCartTotal();
   const { subtotal, recargo, total, esEnvioGratis, mensajeRecargo } = useShippingCalculation(subtotalCarrito);
   const promoEnvio = getMensajePromoEnvio(subtotalCarrito);
-
   const validarFormulario = () => {
     const nuevosErrores = {};
-
     // Validar tipo de entrega
     if (!formData.tipoEntrega) {
       nuevosErrores.tipoEntrega = 'Selecciona un tipo de entrega';
     }
-
     // Validar zona (solo para delivery)
     if (formData.tipoEntrega === 'delivery' && !formData.zona) {
       nuevosErrores.zona = 'Selecciona una zona';
     }
-
     // Validar nombre
     if (!formData.nombre.trim() || formData.nombre.trim().length < 2) {
       nuevosErrores.nombre = 'El nombre es requerido (mínimo 2 caracteres)';
     }
-
     // Validar dirección (solo para delivery)
     if (formData.tipoEntrega === 'delivery' && (!formData.direccion.trim() || formData.direccion.trim().length < 10)) {
       nuevosErrores.direccion = 'La dirección es requerida (mínimo 10 caracteres)';
     }
-
     // Validar teléfono
     if (!formData.telefono.trim() || formData.telefono.trim().length < 8) {
       nuevosErrores.telefono = 'El teléfono es requerido (mínimo 8 dígitos)';
     }
-
     // Validar método de pago
     if (!formData.metodoPago) {
       nuevosErrores.metodoPago = 'Selecciona un método de pago';
     }
-
     // Validar datos de facturación (opcional pero si se llenan deben ser válidos)
     if (formData.nitCf && formData.nitCf.trim().toLowerCase() !== 'cf' && formData.nitCf.trim().length < 3) {
       nuevosErrores.nitCf = 'El NIT debe tener al menos 3 caracteres (o escriba "CF" si no desea factura)';
     }
-
     if (formData.nitCf && formData.nitCf.trim().toLowerCase() !== 'cf' && !formData.nombreFacturacion.trim()) {
       nuevosErrores.nombreFacturacion = 'Si proporcionas NIT, el nombre de facturación es requerido';
     }
-
     setErrores(nuevosErrores);
     return Object.keys(nuevosErrores).length === 0;
   };
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    
     // Log específico para el campo de notas
     if (name === 'notas') {
-      console.log('📝 Campo notas actualizado:', value);
-      console.log('📝 Longitud:', value.length);
     }
-    
     setFormData(prev => ({ ...prev, [name]: value }));
-    
     // Limpiar error específico cuando el usuario empieza a escribir
     if (errores[name]) {
       setErrores(prev => ({ ...prev, [name]: '' }));
     }
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
     if (!validarFormulario()) {
       return;
     }
-
     setIsProcessing(true);
     setError('');
-
     try {
       // Formatear datos para la API
-      console.log('🔍 DATOS DEL FORMULARIO ANTES DE FORMATEAR:');
-      console.log('📝 formData.notas:', formData.notas);
-      console.log('📝 Longitud de notas:', formData.notas ? formData.notas.length : 0);
-      console.log('📝 Tipo de notas:', typeof formData.notas);
-      
       const datosParaAPI = formatearDatosParaAPI(
         cartItems,
         formData,
@@ -150,21 +116,11 @@ export default function CheckoutModal({ isOpen, onClose }) {
         formData.tipoEntrega,
         formData.notas // Agregar las notas al pedido
       );
-
-      console.log('📦 Enviando pedido:', datosParaAPI);
-      console.log('💬 ¿Tiene notas en el JSON final?', !!datosParaAPI.notas);
-      console.log('💬 Notas finales:', datosParaAPI.notas);
-      console.log('🧾 ¿Tiene NIT?', !!datosParaAPI.nit);
-      console.log('🧾 ¿Tiene nombre_factura?', !!datosParaAPI.nombre_factura);
-      
       // Enviar pedido a la API
       const resultado = await registrarPedido(datosParaAPI);
-
       if (resultado.success) {
-        console.log('✅ Pedido registrado exitosamente:', resultado);
         setPedidoExitoso(true);
         clearCart(); // Limpiar carrito después del éxito
-        
         // Cerrar modal después de 3 segundos usando un ref para evitar memory leaks
         const timeoutId = setTimeout(() => {
           onClose();
@@ -181,15 +137,12 @@ export default function CheckoutModal({ isOpen, onClose }) {
             nombreFacturacion: ''
           });
         }, 3000);
-        
         // Limpiar timeout si el componente se desmonta
         return () => clearTimeout(timeoutId);
       } else {
         throw new Error(resultado.message || 'Error al procesar el pedido');
       }
     } catch (error) {
-      console.error('❌ Error en el checkout:', error);
-      
       // Manejo específico de errores CORS
       if (error.message?.includes('CORS') || error.message?.includes('Network Error')) {
         setError('Error de conexión con el servidor. Por favor, verifica que el servidor esté funcionando correctamente.');
@@ -204,7 +157,6 @@ export default function CheckoutModal({ isOpen, onClose }) {
       setIsProcessing(false);
     }
   };
-
   if (pedidoExitoso) {
     return (
       <>
@@ -225,7 +177,6 @@ export default function CheckoutModal({ isOpen, onClose }) {
       </>
     );
   }
-
   return (
     <>
       {/* Modal */}
@@ -243,7 +194,6 @@ export default function CheckoutModal({ isOpen, onClose }) {
               </button>
             </div>
           </div>
-
           <form onSubmit={handleSubmit} className="px-4 sm:px-6 py-6 space-y-6 max-w-4xl mx-auto">
             {/* Tipo de Entrega */}
             <div>
@@ -269,7 +219,6 @@ export default function CheckoutModal({ isOpen, onClose }) {
                     <p className="text-xs text-gray-500 mt-1">Disponible para recoger en 30 minutos</p>
                   </div>
                 </label>
-
                 <label className={`flex items-center p-4 border rounded-xl cursor-pointer transition-colors ${
                   formData.tipoEntrega === 'pickup' ? 'border-orange-500 bg-orange-50' : 'border-gray-300'
                 }`}>
@@ -290,7 +239,6 @@ export default function CheckoutModal({ isOpen, onClose }) {
               </div>
               {errores.tipoEntrega && <p className="text-red-500 text-sm mt-1">{errores.tipoEntrega}</p>}
             </div>
-
             {/* Datos de Envío */}
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
@@ -324,7 +272,6 @@ export default function CheckoutModal({ isOpen, onClose }) {
                     </p>
                   </div>
                 )}
-
                 {/* Nombre */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -342,7 +289,6 @@ export default function CheckoutModal({ isOpen, onClose }) {
                   />
                   {errores.nombre && <p className="text-red-500 text-sm mt-1">{errores.nombre}</p>}
                 </div>
-
                 {/* Dirección - Solo para delivery */}
                 {formData.tipoEntrega === 'delivery' && (
                   <div className="md:col-span-2">
@@ -362,7 +308,6 @@ export default function CheckoutModal({ isOpen, onClose }) {
                     {errores.direccion && <p className="text-red-500 text-sm mt-1">{errores.direccion}</p>}
                   </div>
                 )}
-
                 {/* Teléfono */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -380,7 +325,6 @@ export default function CheckoutModal({ isOpen, onClose }) {
                   />
                   {errores.telefono && <p className="text-red-500 text-sm mt-1">{errores.telefono}</p>}
                 </div>
-
                 {/* Método de Pago */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -402,7 +346,6 @@ export default function CheckoutModal({ isOpen, onClose }) {
                   </select>
                   {errores.metodoPago && <p className="text-red-500 text-sm mt-1">{errores.metodoPago}</p>}
                 </div>
-
                 {/* Comentarios/Notas adicionales */}
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
@@ -424,7 +367,6 @@ export default function CheckoutModal({ isOpen, onClose }) {
                 </div>
               </div>
             </div>
-
             {/* Datos de Facturación */}
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
@@ -448,7 +390,6 @@ export default function CheckoutModal({ isOpen, onClose }) {
                   />
                   {errores.nitCf && <p className="text-red-500 text-sm mt-1">{errores.nitCf}</p>}
                 </div>
-
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     A nombre de *
@@ -467,7 +408,6 @@ export default function CheckoutModal({ isOpen, onClose }) {
                 </div>
               </div>
             </div>
-
             {/* Resumen del Pedido */}
             <div className="bg-gray-50 rounded-xl p-4">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Resumen del Pedido</h3>
@@ -476,17 +416,15 @@ export default function CheckoutModal({ isOpen, onClose }) {
                   <span>Subtotal:</span>
                   <span>Q{subtotal.toFixed(2)}</span>
                 </div>
-                
                 {/* Mostrar línea de envío solo para delivery */}
                 {formData.tipoEntrega === 'delivery' && (
                   <div className="flex justify-between">
-                    <span>{esEnvioGratis ? 'Envío:' : 'Recargo por envío:'}</span>
-                    <span className={esEnvioGratis ? 'text-green-600 font-medium' : ''}>
-                      {esEnvioGratis ? 'GRATIS' : `Q${recargo.toFixed(2)}`}
+                    <span>Recargo por envío:</span>
+                    <span className={recargo === 0 ? 'text-green-600 font-medium' : ''}>
+                      {recargo === 0 ? 'GRATIS' : `Q${recargo.toFixed(2)}`}
                     </span>
                   </div>
                 )}
-                
                 {/* Para pickup, mostrar mensaje informativo */}
                 {formData.tipoEntrega === 'pickup' && (
                   <div className="flex justify-between">
@@ -494,7 +432,6 @@ export default function CheckoutModal({ isOpen, onClose }) {
                     <span className="text-green-600 font-medium">SIN COSTO</span>
                   </div>
                 )}
-                
                 <div className="border-t border-gray-300 pt-2 flex justify-between font-bold text-lg">
                   <span>Total:</span>
                   <span className="text-orange-600">
@@ -502,9 +439,6 @@ export default function CheckoutModal({ isOpen, onClose }) {
                   </span>
                 </div>
               </div>
-              
-              
-              
               {/* Mensaje para pickup */}
               {formData.tipoEntrega === 'pickup' && (
                 <div className="mt-3 p-3 rounded-lg text-sm text-center bg-green-50 text-green-700 border border-green-200">
@@ -513,14 +447,12 @@ export default function CheckoutModal({ isOpen, onClose }) {
                 </div>
               )}
             </div>
-
             {/* Error Message */}
             {error && (
               <div className="bg-red-50 border border-red-200 rounded-xl p-4">
                 <p className="text-red-700 text-sm">{error}</p>
               </div>
             )}
-
             {/* Submit Button */}
             <button
               type="submit"

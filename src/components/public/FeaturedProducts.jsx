@@ -2,35 +2,23 @@ import { useMenu } from "../../context/MenuContext";
 import { Link } from "react-router-dom";
 import ProductCard from "./ProductCard";
 import { useIntersectionObserver } from '../../hooks/useIntersectionObserver';
-
 export default function FeaturedProducts() {
-  console.log('🎯 FeaturedProducts - Componente renderizándose');
-  
   let productos = [];
   let loading = true;
   let error = null;
-  
   try {
     const menuContext = useMenu();
     productos = menuContext.productos;
     loading = menuContext.loading;
     error = menuContext.error;
-    console.log('🎯 FeaturedProducts - Context obtenido correctamente:', { productos: productos.length, loading, error });
-    console.log('🎯 FeaturedProducts - Productos completos:', productos);
   } catch (contextError) {
-    console.error('🎯 FeaturedProducts - Error al obtener context:', contextError);
-    console.log('🎯 FeaturedProducts - Usando valores por defecto');
     productos = [];
     loading = false;
     error = 'Context no disponible';
   }
-  
   const [sectionRef, isVisible] = useIntersectionObserver();
-
   // Mostrar solo los primeros 4 productos
   const productosDestacados = productos.slice(0, 4);
-  console.log('🎯 FeaturedProducts - Productos destacados (primeros 4):', productosDestacados);
-
   if (loading) {
     return (
       <section className="py-16 bg-gray-50">
@@ -54,7 +42,6 @@ export default function FeaturedProducts() {
       </section>
     );
   }
-
   if (error) {
     return (
       <section className="py-16 bg-gray-50">
@@ -71,7 +58,6 @@ export default function FeaturedProducts() {
       </section>
     );
   }
-
   return (
     <section ref={sectionRef} className="py-16 bg-gray-50">
       <div className="max-w-7xl mx-auto px-8 md:px-16 lg:px-20">
@@ -83,7 +69,6 @@ export default function FeaturedProducts() {
             Descubre algunos de nuestros deliciosos platos tradicionales
           </p>
         </div>
-
         {productosDestacados.length > 0 ? (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
@@ -103,7 +88,6 @@ export default function FeaturedProducts() {
                 </div>
               ))}
             </div>
-            
             <div className={`text-center transition-all duration-800 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: isVisible ? '1000ms' : '0ms' }}>
               <Link
                 to="/pedidos"

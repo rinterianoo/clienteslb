@@ -2,11 +2,9 @@ import { MapPinIcon, PhoneIcon, ClockIcon, GlobeAltIcon, UserGroupIcon } from '@
 import { HeartIcon } from '@heroicons/react/24/solid';
 import { useIntersectionObserver } from '../../hooks/useIntersectionObserver';
 import { useState } from 'react';
-
 export default function LocationsSection() {
   const [sectionRef, isVisible] = useIntersectionObserver();
   const [activeLocation, setActiveLocation] = useState(0);
-  
   const locations = [
     {
       id: 1,
@@ -29,11 +27,9 @@ export default function LocationsSection() {
       features: ["Mercado Gastronómico", "Música Ambiente", "Estacionamiento", "Eventos Especiales","Pet Friendly"]
     }
   ];
-
   const handleOpenMaps = (url) => {
     window.open(url, '_blank');
   };
-
   return (
     <section id="ubicaciones" ref={sectionRef} className="bg-gradient-to-br from-gray-50 to-white py-12 sm:py-16 lg:py-20 pb-6 sm:pb-8 lg:pb-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -50,7 +46,6 @@ export default function LocationsSection() {
             experiencia <span className="text-orange-600 font-semibold">La Berraquera</span>
           </p>
         </div>
-
         {/* Mobile Location Selector */}
         <div className="mt-8 sm:mt-12 lg:hidden">
           <div className="flex space-x-2 overflow-x-auto pb-2">
@@ -69,7 +64,6 @@ export default function LocationsSection() {
             ))}
           </div>
         </div>
-
         {/* Locations Grid - Desktop */}
         <div className="hidden lg:grid grid-cols-1 lg:grid-cols-2 gap-8 mt-16 max-w-6xl mx-auto">
           {locations.map((location, index) => (
@@ -82,7 +76,6 @@ export default function LocationsSection() {
             />
           ))}
         </div>
-
         {/* Mobile Location Display */}
         <div className="lg:hidden mt-6">
           <LocationCard 
@@ -93,14 +86,12 @@ export default function LocationsSection() {
             isMobile={true}
           />
         </div>
-
         {/* Call to Action */}
         <div className={`text-center mt-12 sm:mt-16 transition-all duration-1000 delay-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <div className="bg-gradient-to-r from-orange-500 to-orange-700 rounded-3xl p-6 sm:p-8 lg:p-12 text-white relative overflow-hidden">
             <div className="absolute inset-0 bg-black opacity-10"></div>
             <div className="relative z-10">
               <div className="flex items-center justify-center mb-4">
-                
                 <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold">
                   ¡Te Esperamos!
                 </h3>
@@ -131,10 +122,8 @@ export default function LocationsSection() {
     </section>
   );
 }
-
 function LocationCard({ location, index, isVisible, onOpenMaps, isMobile = false }) {
   const [isHovered, setIsHovered] = useState(false);
-
   return (
     <div 
       className={`bg-white rounded-3xl shadow-xl overflow-hidden transition-all duration-700 hover:shadow-2xl transform hover:-translate-y-2 flex flex-col h-full ${
@@ -169,20 +158,17 @@ function LocationCard({ location, index, isVisible, onOpenMaps, isMobile = false
           </div>
         </div>
       </div>
-
       {/* Content */}
       <div className="p-6 sm:p-8 flex-1 flex flex-col">
         <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 flex items-center">
           <span className="w-3 h-3 bg-orange-500 rounded-full mr-3 animate-pulse"></span>
           {location.nombre}
         </h3>
-        
         <div className="space-y-4">
           <div className="flex items-start space-x-3 text-gray-600">
             <MapPinIcon className="w-5 h-5 text-orange-500 mt-0.5 flex-shrink-0" />
             <span className="text-base leading-relaxed">{location.direccion}</span>
           </div>
-          
           <div className="flex items-center space-x-3 text-gray-600">
             <PhoneIcon className="w-5 h-5 text-orange-500 flex-shrink-0" />
             <a 
@@ -192,13 +178,11 @@ function LocationCard({ location, index, isVisible, onOpenMaps, isMobile = false
               {location.telefono}
             </a>
           </div>
-          
           <div className="flex items-start space-x-3 text-gray-600">
             <ClockIcon className="w-5 h-5 text-orange-500 mt-0.5 flex-shrink-0" />
             <span className="text-base leading-relaxed">{location.horarios}</span>
           </div>
         </div>
-
         {/* Features */}
         <div className="mt-6 pt-4 border-t border-gray-100">
           <h4 className="text-sm font-semibold text-gray-700 mb-3 flex items-center">
@@ -216,7 +200,6 @@ function LocationCard({ location, index, isVisible, onOpenMaps, isMobile = false
             ))}
           </div>
         </div>
-
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-3 mt-auto pt-6">
           <button
@@ -226,7 +209,6 @@ function LocationCard({ location, index, isVisible, onOpenMaps, isMobile = false
             <MapPinIcon className="w-5 h-5 mr-2" />
             Abrir en Maps
           </button>
-          
           <button
             onClick={() => window.location.href = `tel:${location.telefono}`}
             className="flex-1 bg-gradient-to-r from-orange-400 to-orange-600 hover:from-orange-500 hover:to-orange-700 text-white py-3 px-6 rounded-2xl transition-all duration-300 flex items-center justify-center transform hover:scale-105 shadow-lg hover:shadow-xl font-medium"

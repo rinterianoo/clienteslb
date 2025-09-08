@@ -3,7 +3,6 @@ import { XMarkIcon, MinusIcon, PlusIcon, ShoppingBagIcon, TrashIcon } from '@her
 import { useState } from 'react';
 import CheckoutModal from './CheckoutModal';
 import { useShippingCalculation, getMensajePromoEnvio } from '../../hooks/useShipping';
-
 export default function Cart() {
   const { 
     cartItems, 
@@ -14,16 +13,12 @@ export default function Cart() {
     toggleCart,
     clearCart
   } = useCart();
-
   const [isClearing, setIsClearing] = useState(false);
   const [showCheckout, setShowCheckout] = useState(false);
-
   if (!isCartOpen) return null;
-
   const subtotalCarrito = getCartTotal();
   const { subtotal, recargo, total, esEnvioGratis } = useShippingCalculation(subtotalCarrito);
   const promoEnvio = getMensajePromoEnvio(subtotalCarrito);
-
   const handleClearCart = () => {
     setIsClearing(true);
     setTimeout(() => {
@@ -31,15 +26,12 @@ export default function Cart() {
       setIsClearing(false);
     }, 300);
   };
-
   const handleProceedToCheckout = () => {
     setShowCheckout(true);
   };
-
   const handleCloseCheckout = () => {
     setShowCheckout(false);
   };
-
   return (
     <>
       {/* Overlay */}
@@ -47,7 +39,6 @@ export default function Cart() {
         className="fixed inset-0 bg-black bg-opacity-50 z-40"
         onClick={toggleCart}
       />
-      
       {/* Cart Sidebar - Mobile Optimized */}
       <div className="fixed right-0 top-0 h-full w-full sm:max-w-md lg:max-w-lg bg-white shadow-2xl z-50 transform transition-transform duration-300 flex flex-col">
         {/* Header */}
@@ -68,7 +59,6 @@ export default function Cart() {
             <XMarkIcon className="w-6 h-6 text-gray-500" />
           </button>
         </div>
-
         {/* Cart Items */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6">
           {cartItems.length === 0 ? (
@@ -91,21 +81,17 @@ export default function Cart() {
                 // Función para construir la URL de la imagen (igual que en MenuProductCard)
                 const getImageUrl = (imagenUrl) => {
                   if (!imagenUrl) return null;
-                  
                   // Si ya es una URL completa, usarla directamente
                   if (imagenUrl.startsWith('http://') || imagenUrl.startsWith('https://')) {
                     return imagenUrl;
                   }
-                  
                   // Si es una ruta relativa, construir la URL completa
                   const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
                   // Remover la barra inicial si existe para evitar doble barra
                   const cleanPath = imagenUrl.startsWith('/') ? imagenUrl.slice(1) : imagenUrl;
                   return `${baseUrl}/${cleanPath}`;
                 };
-
                 const imageUrl = getImageUrl(item.imagen_url);
-                
                 return (
                   <div key={item.id ? `cart-${item.id}` : `cart-idx-${idx}`} className="bg-gray-50 rounded-2xl p-3 sm:p-4 hover:bg-gray-100 transition-colors">
                     <div className="flex items-start space-x-3">
@@ -142,7 +128,6 @@ export default function Cart() {
                           </div>
                         )}
                       </div>
-
                       {/* Product Info */}
                       <div className="flex-1 min-w-0">
                         <h3 className="text-base sm:text-lg font-bold text-gray-900 truncate">
@@ -151,7 +136,6 @@ export default function Cart() {
                         <p className="text-orange-600 font-bold text-lg">
                           Q{item.precio?.toFixed(2)}
                         </p>
-                        
                         {/* Quantity Controls */}
                         <div className="flex items-center justify-between mt-3">
                           <div className="flex items-center space-x-2">
@@ -160,7 +144,6 @@ export default function Cart() {
                                 try {
                                   updateQuantity(item._id, item.cantidad - 1);
                                 } catch (e) {
-                                  console.log('Cantidad actualizada');
                                 }
                               }}
                               className="p-1.5 hover:bg-orange-100 rounded-full transition-colors"
@@ -175,7 +158,6 @@ export default function Cart() {
                                 try {
                                   updateQuantity(item._id, item.cantidad + 1);
                                 } catch (e) {
-                                  console.log('Cantidad actualizada');
                                 }
                               }}
                               className="p-1.5 hover:bg-orange-100 rounded-full transition-colors"
@@ -183,14 +165,12 @@ export default function Cart() {
                               <PlusIcon className="w-4 h-4 text-orange-600" />
                             </button>
                           </div>
-                          
                           {/* Remove Button */}
                           <button
                             onClick={() => {
                               try {
                                 removeFromCart(item._id);
                               } catch (e) {
-                                console.log('Producto eliminado');
                               }
                             }}
                             className="p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors"
@@ -200,7 +180,6 @@ export default function Cart() {
                         </div>
                       </div>
                     </div>
-                    
                     {/* Subtotal */}
                     <div className="mt-3 text-right">
                       <p className="text-gray-600 text-sm">
@@ -213,7 +192,6 @@ export default function Cart() {
             </div>
           )}
         </div>
-
         {/* Footer */}
         {cartItems.length > 0 && (
           <div className="border-t border-gray-200 p-4 sm:p-6 space-y-4 bg-white">
@@ -224,9 +202,9 @@ export default function Cart() {
                 <span className="text-gray-900">Q{subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-base">
-                <span className="text-gray-600">{esEnvioGratis ? 'Envío:' : 'Recargo por envío:'}</span>
-                <span className={esEnvioGratis ? 'text-green-600 font-medium' : 'text-gray-900'}>
-                  {esEnvioGratis ? 'GRATIS' : `Q${recargo.toFixed(2)}`}
+                <span className="text-gray-600">Recargo por envío:</span>
+                <span className={recargo === 0 ? 'text-green-600 font-medium' : 'text-gray-900'}>
+                  {recargo === 0 ? 'GRATIS' : `Q${recargo.toFixed(2)}`}
                 </span>
               </div>
               <div className="flex justify-between items-center text-xl font-bold border-t border-gray-200 pt-2">
@@ -234,7 +212,6 @@ export default function Cart() {
                 <span className="text-orange-600">Q{total.toFixed(2)}</span>
               </div>
             </div>
-            
             {/* Action Buttons */}
             <div className="space-y-3">
               <button 
@@ -242,7 +219,6 @@ export default function Cart() {
                   try {
                     handleProceedToCheckout();
                   } catch (e) {
-                    console.log('Procesando pago');
                   }
                 }}
                 className="w-full bg-gradient-to-r from-orange-500 to-orange-700 hover:from-orange-600 hover:to-orange-800 text-white py-4 rounded-2xl font-medium text-lg transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg"
@@ -254,7 +230,6 @@ export default function Cart() {
                   try {
                     handleClearCart();
                   } catch (e) {
-                    console.log('Vaciando carrito');
                   }
                 }}
                 disabled={isClearing}
@@ -273,12 +248,9 @@ export default function Cart() {
                 )}
               </button>
             </div>
-
-            
           </div>
         )}
       </div>
-      
       {/* Checkout Modal */}
       <CheckoutModal 
         isOpen={showCheckout} 

@@ -4,27 +4,22 @@ import { useTienda } from "../../context/TiendaContext";
 import { ShoppingBagIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 import logo from "../../assets/images/logolb.jpg";
-
 export default function Navbar() {
   const { getCartItemsCount, toggleCart } = useCart();
   const { tienda, abrirModalCambio } = useTienda();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   const cartItemsCount = getCartItemsCount();
-
   const isActive = (path) => location.pathname === path;
-
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
-
   return (
     <>
       {/* Modern floating navbar with new layout */}
       <nav className="fixed top-1 left-1 right-1 sm:top-2 sm:left-2 sm:right-2 z-40 bg-white/95 backdrop-blur-2xl shadow-lg border border-white/30 rounded-lg sm:rounded-xl">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="grid grid-cols-3 items-center h-10 sm:h-12 lg:h-14">
-            
             {/* Left: Mobile Menu Button */}
             <div className="flex items-center justify-start">
               <button
@@ -38,7 +33,6 @@ export default function Navbar() {
                 )}
               </button>
             </div>
-
             {/* Center: Logo and Restaurant Name */}
             <Link to="/" className="flex items-center justify-center space-x-2 sm:space-x-3 transition-transform duration-300 hover:scale-105">
               <img 
@@ -50,7 +44,6 @@ export default function Navbar() {
                 La Berraquera
               </span>
             </Link>
-
             {/* Right: Store Selector + Cart Button */}
             <div className="flex items-center justify-end gap-1 sm:gap-2">
               {/* Botón para seleccionar/cambiar tienda */}
@@ -75,7 +68,6 @@ export default function Navbar() {
                   <span className="font-medium xs:hidden">📍</span>
                 )}
               </button>
-              
               {/* Botón del carrito */}
               <button
                 onClick={toggleCart}
@@ -91,7 +83,6 @@ export default function Navbar() {
             </div>
           </div>
         </div>
-
         {/* Mobile Menu */}
         <div className={`transition-all duration-300 ease-in-out ${
           isMobileMenuOpen 
@@ -110,7 +101,6 @@ export default function Navbar() {
             >
               <span className="drop-shadow-sm">Inicio</span>
             </Link>
-            
             <a 
               href="/#ubicaciones" 
               onClick={() => setIsMobileMenuOpen(false)}
@@ -118,7 +108,6 @@ export default function Navbar() {
             >
               <span className="drop-shadow-sm">Ubicaciones</span>
             </a>
-            
             <a 
               href="/#eventos" 
               onClick={() => setIsMobileMenuOpen(false)}
@@ -126,7 +115,6 @@ export default function Navbar() {
             >
               <span className="drop-shadow-sm">Eventos</span>
             </a>
-            
             <a 
               href="/#productos-congelados" 
               onClick={() => setIsMobileMenuOpen(false)}
@@ -134,7 +122,6 @@ export default function Navbar() {
             >
               <span className="drop-shadow-sm">Productos Congelados</span>
             </a>
-            
             <Link 
               to="/pedidos" 
               onClick={() => setIsMobileMenuOpen(false)}
@@ -146,7 +133,6 @@ export default function Navbar() {
             >
               <span className="drop-shadow-sm">Menú</span>
             </Link>
-            
             {/* Botón para seleccionar/cambiar tienda en móvil */}
             <button
               onClick={() => {

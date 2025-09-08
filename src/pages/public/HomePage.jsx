@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import fondoImage from "../../assets/images/fondo.jpg";
 import logo from "../../assets/images/logolb.jpg";
@@ -6,7 +5,6 @@ import FeaturedProducts from "../../components/public/FeaturedProducts";
 import LocationsSection from "../../components/public/LocationsSection";
 import EventsSection from "../../components/public/EventsSection";
 import FloatingParticles from "../../components/public/FloatingParticles";
-
 function FrozenProductsSection() {
   return (
     <section id="productos-congelados" className="py-6 sm:py-8 lg:py-12 bg-gradient-to-br from-orange-50 via-white to-yellow-50">
@@ -19,7 +17,6 @@ function FrozenProductsSection() {
         <p className="text-base sm:text-lg lg:text-xl text-gray-700 mb-6 sm:mb-8 max-w-2xl mx-auto leading-relaxed animate-fade-in-up animation-delay-400">
           Lleva el auténtico sabor colombiano a tu casa y disfruta cuando quieras.
         </p>
-        
         {/* Mobile-first button with enhanced animations */}
         <div className="animate-fade-in-up animation-delay-600">
           <Link
@@ -36,7 +33,6 @@ function FrozenProductsSection() {
     </section>
   );
 }
-
 export default function HomePage() {
   return (
     <div className="w-full overflow-x-hidden pt-20 sm:pt-24">
@@ -48,30 +44,24 @@ export default function HomePage() {
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/80 sm:bg-gradient-to-r sm:from-black/80 sm:via-black/60 sm:to-black/40" />
-        
         {/* Efecto de brillo sutil - adaptado para móvil */}
         <div className="absolute inset-0 opacity-10 sm:opacity-20">
           <div className="absolute top-1/4 left-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-gradient-radial from-orange-400/30 to-transparent rounded-full blur-3xl animate-pulse"></div>
           <div className="absolute bottom-1/3 right-1/4 w-48 h-48 sm:w-80 sm:h-80 bg-gradient-radial from-yellow-400/20 to-transparent rounded-full blur-3xl animate-pulse animation-delay-1000"></div>
         </div>
-        
         {/* Partículas flotantes sutiles */}
         <FloatingParticles />
-        
         {/* Content - Mobile First Layout */}
         <div className="relative z-10 w-full px-4 sm:px-6 lg:px-8 flex items-center justify-center min-h-screen">
           <div className="w-full max-w-7xl mx-auto">
-            
             {/* Layout para móvil y desktop */}
             <div className="flex flex-col lg:flex-row items-center justify-center lg:justify-between min-h-screen lg:min-h-[80vh]">
-              
               {/* Contenido izquierdo - Texto */}
               <div className="flex flex-col items-center lg:items-start justify-center lg:w-1/2 text-center lg:text-left pt-0 sm:pt-0 lg:pt-0 min-h-screen lg:min-h-0">
                 {/* Mobile badge */}
                 <span className="text-white text-sm sm:text-lg lg:text-xl tracking-wider mb-4 sm:mb-6 drop-shadow-lg uppercase opacity-90 animate-fade-in-up animation-delay-200">
                    Abierto para envío y recogida
                 </span>
-                
                 {/* Mobile-optimized title - Centered on mobile */}
                 <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white drop-shadow-2xl mb-6 sm:mb-8 lg:mb-12 leading-none text-center lg:text-left">
                   <span className="inline-block animate-fade-in-up animation-delay-400">Comida</span>
@@ -80,7 +70,6 @@ export default function HomePage() {
                   <br />
                   <span className="inline-block text-yellow-400 animate-fade-in-up animation-delay-800">Colombiana</span>
                 </h1>
-                
                 {/* Mobile CTA button */}
                 <Link
                   to="/pedidos"
@@ -91,7 +80,6 @@ export default function HomePage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                 </Link>
-
                 {/* Mobile trust indicators */}
                 <div className="mt-6 sm:mt-8 flex flex-wrap justify-center lg:justify-start gap-4 text-white/80 text-xs sm:text-sm animate-fade-in-up animation-delay-1200">
                   <div className="flex items-center space-x-1">
@@ -108,7 +96,6 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
-
               {/* Logo centrado a la derecha - Solo visible en desktop */}
               <div className="hidden lg:flex lg:w-1/2 items-center justify-center">
                 <div className="relative">
@@ -121,11 +108,9 @@ export default function HomePage() {
                   <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-yellow-400/20 to-orange-400/20 animate-pulse"></div>
                 </div>
               </div>
-              
             </div>
           </div>
         </div>
-        
         {/* Scroll indicator - only on larger screens */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce hidden sm:block z-20">
           <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center">
@@ -133,16 +118,12 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
       {/* Featured Products Section */}
       <FeaturedProducts />
-
       {/* Locations Section */}
       <LocationsSection />
-      
       {/* Events Section */}
       <EventsSection />
-      
       {/* Frozen Products Section */}
       <FrozenProductsSection />
     </div>

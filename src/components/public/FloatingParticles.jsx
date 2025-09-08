@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
-
 export default function FloatingParticles() {
   const [particles, setParticles] = useState([]);
-
   useEffect(() => {
     // Crear partículas con posiciones y velocidades aleatorias
     const particleCount = 12; // Pocas partículas para mantenerlo sutil
@@ -17,7 +15,6 @@ export default function FloatingParticles() {
     }));
     setParticles(newParticles);
   }, []);
-
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
       {particles.map((particle) => (

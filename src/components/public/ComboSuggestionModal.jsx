@@ -3,52 +3,36 @@ import { XMarkIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { useCart } from '../../context/CartContext';
 import { useMenu } from '../../context/MenuContext';
 import { ENVIRONMENT } from '../../config/api';
-
 export default function ComboSuggestionModal({ isOpen, onClose, arepaProduct, cantidad = 1 }) {
   // Solo renderizar logs y ejecutar hooks si el modal está abierto
   if (!isOpen) {
     return null;
   }
-  
   const { addToCart, cartItems } = useCart();
   const { todosLosProductos } = useMenu();
   const [selectedCombo, setSelectedCombo] = useState(null);
   const [isAdding, setIsAdding] = useState(false);
-
   // Filtrar productos de la categoría "Combos" que estén disponibles
   const combosDisponibles = todosLosProductos.filter(producto => 
     producto.categoria?.toLowerCase() === 'combos' && producto.disponible === true
   );
-
   // Construir URL de imagen
   const getImageUrl = (imagenUrl) => {
     if (!imagenUrl) return null;
-    
     if (imagenUrl.startsWith('http')) {
       return imagenUrl;
     }
-    
     if (ENVIRONMENT === 'development') {
       return `http://localhost/Pronto-delivery/${imagenUrl}`;
     } else {
       return `https://prontodelivery.lat/${imagenUrl}`;
     }
   };
-
   const handleAddCombo = async (combo) => {
-    console.log('🚨 PROBLEMA: Modal enviando combo:', combo.nombre, 'ID:', combo._id);
-    
     try {
       setIsAdding(true);
       setSelectedCombo(combo.id);
-      
-      console.log('🚨 ANTES addToCart - combo.nombre:', combo.nombre);
-      console.log('🚨 ANTES addToCart - combo._id:', combo._id);
-      
       addToCart(combo, 1);
-      
-      console.log('🚨 DESPUÉS addToCart ejecutado');
-      
       // Feedback visual
       setTimeout(() => {
         setIsAdding(false);
@@ -56,17 +40,14 @@ export default function ComboSuggestionModal({ isOpen, onClose, arepaProduct, ca
         onClose(); // Cerrar modal después de agregar
       }, 800);
     } catch (e) {
-      console.error('Error en handleAddCombo:', e);
       setIsAdding(false);
       setSelectedCombo(null);
       onClose();
     }
   };
-
   const handleSkip = () => {
     onClose();
   };
-
   return (
     <>
       {/* Modal Container */}
@@ -94,7 +75,6 @@ export default function ComboSuggestionModal({ isOpen, onClose, arepaProduct, ca
               </button>
             </div>
           </div>
-
           {/* Content scrolleable */}
           <div className="flex-1 overflow-y-auto p-2 bg-gray-50">
             {/* Combos disponibles */}
@@ -103,12 +83,10 @@ export default function ComboSuggestionModal({ isOpen, onClose, arepaProduct, ca
                 <h3 className="text-sm font-semibold text-gray-800 mb-2">
                   Combos disponibles:
                 </h3>
-                
                 <div className="grid grid-cols-1 gap-2">
                   {combosDisponibles.map((combo) => {
                     const imageUrl = getImageUrl(combo.imagen_url);
                     const isAddingThis = selectedCombo === combo.id && isAdding;
-                    
                     return (
                       <div
                         key={combo.id}
@@ -130,7 +108,6 @@ export default function ComboSuggestionModal({ isOpen, onClose, arepaProduct, ca
                             </div>
                           </div>
                         )}
-                        
                         {/* Información del combo */}
                         <div className="flex-1 min-w-0">
                           <h4 className="font-bold text-sm text-gray-900 truncate">{combo.nombre}</h4>
@@ -141,7 +118,6 @@ export default function ComboSuggestionModal({ isOpen, onClose, arepaProduct, ca
                             Q{combo.precio?.toFixed(2)}
                           </span>
                         </div> 
-
                         {/* Botón de agregar */}
                         <button
                           onClick={() => handleAddCombo(combo)}
@@ -176,7 +152,6 @@ export default function ComboSuggestionModal({ isOpen, onClose, arepaProduct, ca
               </div>
             )}
           </div>
-
           {/* Footer con botones de acción */}
           <div className="bg-white p-2 border-t border-gray-200 flex-shrink-0">
             <div className="flex gap-2">

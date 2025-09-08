@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { PlusIcon, MinusIcon, ShoppingBagIcon } from '@heroicons/react/24/outline';
 import { CartContext } from '../../context/CartContext';
+import { useModal } from '../../context/ModalContext';
 import ComboSuggestionModal from './ComboSuggestionModal';
 import BandejaPaisaOptionsModal from './BandejaPaisaOptionsModal';
-
 export default function MenuProductCard({ producto }) {
   const [cantidad, setCantidad] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
@@ -11,109 +11,93 @@ export default function MenuProductCard({ producto }) {
   const [showComboModal, setShowComboModal] = useState(false);
   const [showBandejaModal, setShowBandejaModal] = useState(false);
   const { addToCart } = useContext(CartContext);
-
+  const { hasAnyModalOpen, openModal, closeModal } = useModal();
+  // IDs únicos para los modales
+  const comboModalId = `combo-${producto._id}`;
+  const bandejaModalId = `bandeja-${producto._id}`;
   // Función para construir la URL de la imagen
   const getImageUrl = (imagenUrl) => {
     if (!imagenUrl) return null;
-    
     // Si ya es una URL completa, usarla directamente
     if (imagenUrl.startsWith('http://') || imagenUrl.startsWith('https://')) {
       return imagenUrl;
     }
-    
     // Si es una ruta relativa, construir la URL completa
     const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
     // Remover la barra inicial si existe para evitar doble barra
     const cleanPath = imagenUrl.startsWith('/') ? imagenUrl.slice(1) : imagenUrl;
     return `${baseUrl}/${cleanPath}`;
   };
-
   const imageUrl = getImageUrl(producto.imagen_url);
-
   const handleImageError = () => {
     setImageError(true);
   };
-
   const handleAddToCart = async () => {
-    // Prevenir múltiples clicks
-    if (isAdding) {
+    // Prevenir múltiples clicks o si hay otros modales abiertos
+    if (isAdding || hasAnyModalOpen()) {
       return;
     }
-    
     try {
       setIsAdding(true);
-      
       // Verificar si es un producto de la categoría "Bandeja Paisa" para mostrar el modal de opciones
       if (producto.categoria && producto.categoria.toLowerCase().includes('bandeja paisa')) {
         setShowBandejaModal(true);
+        openModal(bandejaModalId);
         setIsAdding(false); // Reset porque el modal manejará el agregado
         return;
       }
-      
       // Verificar si es un producto de la categoría "arepa" para mostrar el modal de combos DESPUÉS de agregar
       if (producto.categoria && producto.categoria.toLowerCase().includes('arepa')) {
-        console.log('🥟 AREPA: Agregando arepa al carrito:', producto.nombre, 'ID:', producto._id);
-        
         // Primero agregar la arepa al carrito
         const productoParaCarrito = {
           ...producto,
           cantidad: cantidad
         };
-        
         addToCart(productoParaCarrito);
-        
         // Luego mostrar el modal de combos
         setShowComboModal(true);
-        
+        openModal(comboModalId);
         // Simular una pequeña pausa para mostrar el estado de "agregado"
         setTimeout(() => {
           setIsAdding(false);
           setCantidad(1);
         }, 500);
-        
         return;
       }
-      
       // Para otros productos que no son arepa ni bandeja paisa, agregar directamente
       const productoParaCarrito = {
         ...producto,
         cantidad: cantidad
       };
-      
       addToCart(productoParaCarrito);
-      
       // Simular una pequeña pausa para mostrar el estado de "agregado"
       setTimeout(() => {
         setIsAdding(false);
         setCantidad(1);
       }, 500);
     } catch (e) {
-      console.log('Producto agregado');
       setIsAdding(false);
     }
   };
-
   const handleCloseComboModal = () => {
     setShowComboModal(false);
+    closeModal(comboModalId);
     // Resetear el estado después de cerrar el modal
     setIsAdding(false);
     setCantidad(1);
   };
-
   const handleCloseBandejaModal = () => {
     setShowBandejaModal(false);
+    closeModal(bandejaModalId);
   };
-
   const incrementQuantity = () => {
     setCantidad(prev => prev + 1);
   };
-
   const decrementQuantity = () => {
     if (cantidad > 1) {
       setCantidad(prev => prev - 1);
     }
   };
-
   return (
     <>
       <div className="bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100">
@@ -142,14 +126,12 @@ export default function MenuProductCard({ producto }) {
               ⭐ Destacado
             </div>
           )}
-          
           {/* Quick add button for mobile */}
           <button
             onClick={() => {
               try {
                 handleAddToCart();
               } catch (e) {
-                console.log('Producto agregado');
               }
             }}
             className="absolute bottom-3 right-3 w-10 h-10 bg-orange-500 hover:bg-orange-600 text-white rounded-full shadow-lg transition-all duration-200 transform hover:scale-110 active:scale-95 flex items-center justify-center sm:hidden"
@@ -157,17 +139,14 @@ export default function MenuProductCard({ producto }) {
             <PlusIcon className="w-5 h-5" />
           </button>
         </div>
-
         {/* Content */}
         <div className="p-4 sm:p-6">
           <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 line-clamp-2 leading-tight">
             {producto.nombre}
           </h3>
-          
           <p className="text-gray-600 text-sm mb-3 sm:mb-4 line-clamp-2 leading-relaxed">
             {producto.descripcion}
           </p>
-
           {/* Category */}
           {producto.categoria && (
             <div className="mb-3 sm:mb-4">
@@ -176,14 +155,12 @@ export default function MenuProductCard({ producto }) {
               </span>
             </div>
           )}
-
           {/* Price */}
           <div className="mb-4 sm:mb-6">
             <span className="text-2xl sm:text-3xl font-bold text-orange-600">
               Q{producto.precio?.toFixed(2)}
             </span>
           </div>
-
           {/* Quantity Selector - Desktop/Tablet only */}
           <div className="hidden sm:flex items-center justify-between mb-4">
             <span className="text-gray-700">Cantidad:</span>
@@ -206,20 +183,20 @@ export default function MenuProductCard({ producto }) {
               </button>
             </div>
           </div>
-
           {/* Add to Cart Button - Desktop/Tablet */}
           <button
             onClick={() => {
               try {
                 handleAddToCart();
               } catch (e) {
-                console.log('Producto agregado');
               }
             }}
-            disabled={isAdding}
+            disabled={isAdding || hasAnyModalOpen()}
             className={`hidden sm:flex w-full items-center justify-center space-x-2 py-3 sm:py-4 rounded-2xl font-medium transition-all duration-300 transform hover:scale-105 active:scale-95 ${
               isAdding 
                 ? 'bg-green-500 text-white' 
+                : hasAnyModalOpen()
+                ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
                 : 'bg-gradient-to-r from-orange-500 to-orange-700 hover:from-orange-600 hover:to-orange-800 text-white'
             }`}
           >
@@ -235,7 +212,6 @@ export default function MenuProductCard({ producto }) {
               </>
             )}
           </button>
-
           {/* Mobile quantity and add section */}
           <div className="sm:hidden space-y-3">
             {/* Quantity selector for mobile */}
@@ -260,20 +236,20 @@ export default function MenuProductCard({ producto }) {
                 </button>
               </div>
             </div>
-
             {/* Add button for mobile */}
             <button
               onClick={() => {
                 try {
                   handleAddToCart();
                 } catch (e) {
-                  console.log('Producto agregado');
                 }
               }}
-              disabled={isAdding}
+              disabled={isAdding || hasAnyModalOpen()}
               className={`w-full flex items-center justify-center space-x-2 py-3 rounded-2xl font-medium transition-all duration-300 transform active:scale-95 ${
                 isAdding 
                   ? 'bg-green-500 text-white' 
+                  : hasAnyModalOpen()
+                  ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
                   : 'bg-gradient-to-r from-orange-500 to-orange-700 text-white'
               }`}
             >
@@ -292,7 +268,6 @@ export default function MenuProductCard({ producto }) {
           </div>
         </div>
       </div>
-
       {/* Modal de sugerencia de combos */}
       <ComboSuggestionModal
         isOpen={showComboModal}
@@ -300,7 +275,6 @@ export default function MenuProductCard({ producto }) {
         arepaProduct={producto}
         cantidad={cantidad}
       />
-
       {/* Modal de opciones de Bandeja Paisa */}
       <BandejaPaisaOptionsModal
         isOpen={showBandejaModal}

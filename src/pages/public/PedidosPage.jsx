@@ -4,20 +4,14 @@ import { useCart } from '../../context/CartContext';
 import MenuProductCard from '../../components/public/MenuProductCard';
 import Cart from '../../components/public/Cart';
 import { MagnifyingGlassIcon, ShoppingBagIcon, AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline';
-
 export default function PedidosPage() {
   const { productos, loading, error } = useMenu();
   const { getCartItemsCount, toggleCart } = useCart();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Todos');
   const [showFilters, setShowFilters] = useState(false);
-
-  console.log('🛍️ PedidosPage - Renderizando. Productos:', productos.length, 'Loading:', loading, 'Error:', error);
-  console.log('🛍️ PedidosPage - Productos completos:', productos);
-
   // Get unique categories
   const categories = ['Todos', ...new Set(productos.map(p => p.categoria).filter(Boolean))];
-
   // Filter products
   const filteredProducts = productos.filter(producto => {
     const matchesSearch = producto.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -25,9 +19,6 @@ export default function PedidosPage() {
     const matchesCategory = selectedCategory === 'Todos' || producto.categoria === selectedCategory;
     return matchesSearch && matchesCategory;
   });
-
-  console.log('🛍️ PedidosPage - Productos filtrados:', filteredProducts.length, filteredProducts);
-
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-yellow-50 pt-14 sm:pt-16">
@@ -54,7 +45,6 @@ export default function PedidosPage() {
       </div>
     );
   }
-
   if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-pink-50 flex items-center justify-center px-4 pt-20 sm:pt-24">
@@ -78,7 +68,6 @@ export default function PedidosPage() {
       </div>
     );
   }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-yellow-50 pt-14 sm:pt-16">
       {/* Floating Cart Button - Mobile */}
@@ -93,7 +82,6 @@ export default function PedidosPage() {
           </span>
         )}
       </button>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {/* Header - Modern & Beautiful */}
         <div className="text-center mb-8 sm:mb-12">
@@ -124,7 +112,6 @@ export default function PedidosPage() {
             </div>
           </div>
         </div>
-
         {/* Search and Filters - Modern Design */}
         <div className="mb-8 sm:mb-12 space-y-6 animate-fade-in-up animation-delay-800">
           {/* Search Bar */}
@@ -146,7 +133,6 @@ export default function PedidosPage() {
               </button>
             )}
           </div>
-
           {/* Filter Toggle Button - Mobile */}
           <div className="flex items-center justify-between animate-fade-in-up animation-delay-1000">
             <button
@@ -156,7 +142,6 @@ export default function PedidosPage() {
               <AdjustmentsHorizontalIcon className="w-5 h-5" />
               <span className="font-medium">Filtros</span>
             </button>
-            
             {/* Products Count */}
             <div className="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border-2 border-gray-200 shadow-lg">
               <p className="text-sm font-medium">
@@ -168,7 +153,6 @@ export default function PedidosPage() {
               </p>
             </div>
           </div>
-
           {/* Category Filters - Modern Design */}
           <div className={`${showFilters ? 'block' : 'hidden'} sm:block transition-all duration-300 animate-fade-in-up animation-delay-1200`}>
             <div className="flex flex-wrap gap-3 sm:gap-4">
@@ -192,7 +176,6 @@ export default function PedidosPage() {
             </div>
           </div>
         </div>
-
         {/* Products Grid - Modern Layout */}
         {filteredProducts.length > 0 ? (
           <>
@@ -207,7 +190,6 @@ export default function PedidosPage() {
                 </div>
               ))}
             </div>
-            
             {/* Load More Button (Future Feature) */}
             {filteredProducts.length > 12 && (
               <div className="text-center mt-12 animate-fade-in-up animation-delay-2000">
@@ -251,7 +233,6 @@ export default function PedidosPage() {
           </div>
         )}
       </div>
-
       {/* Cart Component */}
       <Cart />
     </div>

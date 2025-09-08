@@ -2,10 +2,8 @@ import { useState } from 'react';
 import { useMenu } from "../../context/MenuContext";
 import { Link } from "react-router-dom";
 import { ENVIRONMENT } from '../../config/api';
-
 export default function ProductCard({ producto }) {
   const [imageError, setImageError] = useState(false);
-  
   const formatPrice = (price) => {
     return new Intl.NumberFormat('es-GT', {
       style: 'currency',
@@ -13,16 +11,13 @@ export default function ProductCard({ producto }) {
       minimumFractionDigits: 2,
     }).format(price);
   };
-
   // Construir URL completa de la imagen según el entorno
   const getImageUrl = (imagenUrl) => {
     if (!imagenUrl) return null;
-    
     // Si ya es una URL completa, usarla directamente
     if (imagenUrl.startsWith('http')) {
       return imagenUrl;
     }
-    
     // Construir URL según el entorno
     if (ENVIRONMENT === 'development') {
       return `http://localhost/Pronto-delivery/${imagenUrl}`;
@@ -30,16 +25,10 @@ export default function ProductCard({ producto }) {
       return `https://prontodelivery.lat/midelivery/${imagenUrl}`;
     }
   };
-
   const imageUrl = getImageUrl(producto.imagen_url);
-
   const handleImageError = () => {
-    console.log('🖼️ ProductCard - Error cargando imagen para:', producto.nombre, 'URL:', imageUrl);
     setImageError(true);
   };
-
-  console.log('🖼️ ProductCard - Imagen URL construida:', imageUrl); // Para debug
-
   return (
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
       {imageUrl && !imageError ? (

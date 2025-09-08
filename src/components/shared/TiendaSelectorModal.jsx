@@ -1,30 +1,23 @@
 import { useTienda, TIENDAS } from '../../context/TiendaContext';
+import { useCart } from '../../context/CartContext';
 import { useEffect, useState } from 'react';
-
 export default function TiendaSelectorModal() {
   const { tienda, seleccionarTienda, mostrarModal, setMostrarModal } = useTienda();
-  
-  console.log('🪟 Modal - Render, tienda:', tienda, 'mostrarModal:', mostrarModal);
-
+  const { clearCart, cartItems } = useCart();
   // El modal se muestra si NO hay tienda seleccionada O si mostrarModal es true
   const shouldShow = !tienda || mostrarModal;
-
-  console.log('🪟 Modal - shouldShow:', shouldShow, 'razón:', !tienda ? 'no hay tienda' : 'mostrarModal=true');
-
   const handleSeleccionarTienda = (tiendaSeleccionada) => {
-    console.log('🪟 Modal - Seleccionando tienda:', tiendaSeleccionada.nombre);
+    // Si hay productos en el carrito y se está cambiando de tienda, limpiar el carrito
+    if (cartItems.length > 0 && tienda && tienda.id_restaurante !== tiendaSeleccionada.id_restaurante) {
+      clearCart();
+    }
     seleccionarTienda(tiendaSeleccionada);
     setMostrarModal(false); // Ocultar el modal después de seleccionar
   };
-
   // SIEMPRE renderizar el modal si debe mostrarse
   if (!shouldShow) {
-    console.log('🪟 Modal - No se muestra');
     return null;
   }
-
-  console.log('🪟 Modal - *** SE MUESTRA EL MODAL ***');
-
   return (
     <div 
       className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm px-4 sm:px-6"
@@ -61,7 +54,6 @@ export default function TiendaSelectorModal() {
               <div className="text-base sm:text-lg font-bold mb-2 text-gray-800 leading-tight">
                 {t.nombre}
               </div>
-              
               {/* Dirección */}
               <div className="text-xs sm:text-sm text-gray-600 mb-2 flex items-start gap-2">
                 <svg className="w-3 h-3 sm:w-4 sm:h-4 text-orange-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -70,7 +62,6 @@ export default function TiendaSelectorModal() {
                 </svg>
                 <span className="leading-relaxed">{t.direccion}</span>
               </div>
-              
               {/* Teléfono */}
               <div className="text-xs sm:text-sm text-gray-600 flex items-center gap-2">
                 <svg className="w-3 h-3 sm:w-4 sm:h-4 text-blue-500 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -78,7 +69,6 @@ export default function TiendaSelectorModal() {
                 </svg>
                 <span>{t.telefono}</span>
               </div>
-              
               {/* Indicador visual para móvil */}
               <div className="flex justify-end mt-2">
                 <div className={`w-2 h-2 rounded-full ${
@@ -88,7 +78,6 @@ export default function TiendaSelectorModal() {
             </button>
           ))}
         </div>
-        
         {/* Footer responsive */}
         <p className="mt-4 sm:mt-5 text-gray-500 text-xs sm:text-sm px-2 leading-relaxed">
           Puedes cambiar de tienda usando el botón en la barra de navegación.

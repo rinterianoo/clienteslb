@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import { XMarkIcon, CheckIcon } from '@heroicons/react/24/outline';
 import { useCart } from '../../context/CartContext';
-
 export default function BandejaPaisaOptionsModal({ isOpen, onClose, bandejaProduct, cantidad = 1 }) {
   const { addToCart } = useCart();
   const [selectedOption, setSelectedOption] = useState('');
   const [isAdding, setIsAdding] = useState(false);
-
   // Opciones disponibles para Bandeja Paisa
   const opcionesBandeja = [
     {
@@ -20,32 +18,22 @@ export default function BandejaPaisaOptionsModal({ isOpen, onClose, bandejaProdu
       descripcion: 'Bandeja paisa con chorizo y morcilla'
     }
   ];
-
   const handleSelectOption = (option) => {
     setSelectedOption(option.id);
   };
-
   const handleAddBandeja = async () => {
     if (!selectedOption) return;
-    
     try {
       setIsAdding(true);
-      
       // Encontrar la opción seleccionada
       const opcionSeleccionada = opcionesBandeja.find(op => op.id === selectedOption);
-      
       // Crear producto con comentario
       const productoConComentario = {
         ...bandejaProduct,
         comentario: `Opción seleccionada: ${opcionSeleccionada.nombre}`,
         cantidad: cantidad
       };
-      
-      console.log('🍽️ Bandeja Paisa - Producto con comentario:', productoConComentario);
-      console.log('🍽️ Bandeja Paisa - Comentario agregado:', productoConComentario.comentario);
-      
       addToCart(productoConComentario, cantidad);
-      
       // Feedback visual
       setTimeout(() => {
         setIsAdding(false);
@@ -53,20 +41,16 @@ export default function BandejaPaisaOptionsModal({ isOpen, onClose, bandejaProdu
         onClose(); // Cerrar modal después de agregar
       }, 800);
     } catch (e) {
-      console.log('Bandeja agregada con opción');
       setIsAdding(false);
       setSelectedOption('');
       onClose();
     }
   };
-
   const handleSkip = () => {
     setSelectedOption('');
     onClose();
   };
-
   if (!isOpen) return null;
-
   return (
     <>
       {/* Modal Container */}
@@ -94,18 +78,15 @@ export default function BandejaPaisaOptionsModal({ isOpen, onClose, bandejaProdu
               </button>
             </div>
           </div>
-
           {/* Content */}
           <div className="flex-1 overflow-y-auto p-3 bg-gray-50">
             <div>
               <h3 className="text-sm font-semibold text-gray-800 mb-3 text-center">
                 <span className="text-red-600">*</span> Selección obligatoria
               </h3>
-              
               <div className="space-y-3">
                 {opcionesBandeja.map((opcion) => {
                   const isSelected = selectedOption === opcion.id;
-                  
                   return (
                     <div
                       key={opcion.id}
@@ -126,7 +107,6 @@ export default function BandejaPaisaOptionsModal({ isOpen, onClose, bandejaProdu
                             <p className="text-xs text-gray-600">{opcion.descripcion}</p>
                           </div>
                         </div>
-                        
                         {/* Indicador de selección */}
                         <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
                           isSelected 
@@ -144,7 +124,6 @@ export default function BandejaPaisaOptionsModal({ isOpen, onClose, bandejaProdu
               </div>
             </div>
           </div>
-
           {/* Footer */}
           <div className="bg-white p-3 border-t border-gray-200 flex-shrink-0">
             <div className="flex gap-2">

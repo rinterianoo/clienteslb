@@ -1,14 +1,11 @@
 import { calcularRecargoEnvio } from '../services/pedidosService';
-
 // Hook para calcular información de envío
 export function useShippingCalculation(subtotal) {
   const recargo = calcularRecargoEnvio(subtotal);
   const esEnvioGratis = subtotal > 125.00;
   const total = subtotal + recargo;
-  
   // Calcular cuánto falta para envío gratis
   const faltaParaEnvioGratis = esEnvioGratis ? 0 : Math.max(0, 125.01 - subtotal);
-  
   return {
     subtotal: parseFloat(subtotal.toFixed(2)),
     recargo: parseFloat(recargo.toFixed(2)),
@@ -16,16 +13,14 @@ export function useShippingCalculation(subtotal) {
     esEnvioGratis,
     faltaParaEnvioGratis: parseFloat(faltaParaEnvioGratis.toFixed(2)),
     // Mensaje descriptivo del recargo
-    mensajeRecargo: esEnvioGratis 
+    mensajeRecargo: recargo === 0 
       ? "¡Envío gratis!" 
       : `Recargo por envío: Q${recargo.toFixed(2)}`
   };
 }
-
 // Función para obtener el mensaje promocional de envío
 export function getMensajePromoEnvio(subtotal) {
   const { esEnvioGratis, faltaParaEnvioGratis } = useShippingCalculation(subtotal);
-  
   if (esEnvioGratis) {
     return {
       tipo: 'success',
