@@ -2,12 +2,14 @@ import React, { useState, useContext } from 'react';
 import { PlusIcon, MinusIcon, ShoppingBagIcon } from '@heroicons/react/24/outline';
 import { CartContext } from '../../context/CartContext';
 import ComboSuggestionModal from './ComboSuggestionModal';
+import BandejaPaisaOptionsModal from './BandejaPaisaOptionsModal';
 
 export default function MenuProductCard({ producto }) {
   const [cantidad, setCantidad] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [showComboModal, setShowComboModal] = useState(false);
+  const [showBandejaModal, setShowBandejaModal] = useState(false);
   const { addToCart } = useContext(CartContext);
 
   // Función para construir la URL de la imagen
@@ -36,6 +38,13 @@ export default function MenuProductCard({ producto }) {
     try {
       setIsAdding(true);
       
+      // Verificar si es un producto de la categoría "Bandeja Paisa" para mostrar el modal de opciones
+      if (producto.categoria && producto.categoria.toLowerCase().includes('bandeja paisa')) {
+        setShowBandejaModal(true);
+        setIsAdding(false); // Reset porque el modal manejará el agregado
+        return;
+      }
+      
       const productoParaCarrito = {
         ...producto,
         cantidad: cantidad
@@ -61,6 +70,10 @@ export default function MenuProductCard({ producto }) {
 
   const handleCloseComboModal = () => {
     setShowComboModal(false);
+  };
+
+  const handleCloseBandejaModal = () => {
+    setShowBandejaModal(false);
   };
 
   const incrementQuantity = () => {
@@ -257,6 +270,14 @@ export default function MenuProductCard({ producto }) {
         isOpen={showComboModal}
         onClose={handleCloseComboModal}
         arepaProduct={producto}
+      />
+
+      {/* Modal de opciones de Bandeja Paisa */}
+      <BandejaPaisaOptionsModal
+        isOpen={showBandejaModal}
+        onClose={handleCloseBandejaModal}
+        bandejaProduct={producto}
+        cantidad={cantidad}
       />
     </>
   );

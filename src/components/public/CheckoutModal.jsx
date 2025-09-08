@@ -111,6 +111,13 @@ export default function CheckoutModal({ isOpen, onClose }) {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    
+    // Log específico para el campo de notas
+    if (name === 'notas') {
+      console.log('📝 Campo notas actualizado:', value);
+      console.log('📝 Longitud:', value.length);
+    }
+    
     setFormData(prev => ({ ...prev, [name]: value }));
     
     // Limpiar error específico cuando el usuario empieza a escribir
@@ -131,6 +138,11 @@ export default function CheckoutModal({ isOpen, onClose }) {
 
     try {
       // Formatear datos para la API
+      console.log('🔍 DATOS DEL FORMULARIO ANTES DE FORMATEAR:');
+      console.log('📝 formData.notas:', formData.notas);
+      console.log('📝 Longitud de notas:', formData.notas ? formData.notas.length : 0);
+      console.log('📝 Tipo de notas:', typeof formData.notas);
+      
       const datosParaAPI = formatearDatosParaAPI(
         cartItems,
         formData,
@@ -140,6 +152,10 @@ export default function CheckoutModal({ isOpen, onClose }) {
       );
 
       console.log('📦 Enviando pedido:', datosParaAPI);
+      console.log('💬 ¿Tiene notas en el JSON final?', !!datosParaAPI.notas);
+      console.log('💬 Notas finales:', datosParaAPI.notas);
+      console.log('🧾 ¿Tiene NIT?', !!datosParaAPI.nit);
+      console.log('🧾 ¿Tiene nombre_factura?', !!datosParaAPI.nombre_factura);
       
       // Enviar pedido a la API
       const resultado = await registrarPedido(datosParaAPI);

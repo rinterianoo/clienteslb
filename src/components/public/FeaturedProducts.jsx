@@ -16,6 +16,7 @@ export default function FeaturedProducts() {
     loading = menuContext.loading;
     error = menuContext.error;
     console.log('🎯 FeaturedProducts - Context obtenido correctamente:', { productos: productos.length, loading, error });
+    console.log('🎯 FeaturedProducts - Productos completos:', productos);
   } catch (contextError) {
     console.error('🎯 FeaturedProducts - Error al obtener context:', contextError);
     console.log('🎯 FeaturedProducts - Usando valores por defecto');
@@ -28,6 +29,7 @@ export default function FeaturedProducts() {
 
   // Mostrar solo los primeros 4 productos
   const productosDestacados = productos.slice(0, 4);
+  console.log('🎯 FeaturedProducts - Productos destacados (primeros 4):', productosDestacados);
 
   if (loading) {
     return (

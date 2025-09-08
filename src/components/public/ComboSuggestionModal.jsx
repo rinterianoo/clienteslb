@@ -26,7 +26,7 @@ export default function ComboSuggestionModal({ isOpen, onClose, arepaProduct }) 
     if (ENVIRONMENT === 'development') {
       return `http://localhost/Pronto-delivery/${imagenUrl}`;
     } else {
-      return `https://prontodelivery.lat/midelivery/${imagenUrl}`;
+      return `https://prontodelivery.lat/${imagenUrl}`;
     }
   };
 
@@ -58,40 +58,42 @@ export default function ComboSuggestionModal({ isOpen, onClose, arepaProduct }) 
 
   return (
     <>
-      {/* Container sin overlay */}
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        {/* Modal Container */}
-        <div className="bg-white flex flex-col max-w-4xl w-full max-h-[90vh] animate-scale-in rounded-3xl overflow-hidden shadow-2xl">
+      {/* Modal Container */}
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-2">
+        <div 
+          className="bg-white flex flex-col max-w-lg w-full max-h-[70vh] animate-scale-in rounded-xl overflow-hidden shadow-xl relative"
+          onClick={(e) => e.stopPropagation()}
+        >
           {/* Header */}
-          <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white p-4 sm:p-6 flex-shrink-0">
+          <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white p-2 flex-shrink-0">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold flex items-center gap-3">
+                <h2 className="text-base">
                   ¡Perfecto! 
                 </h2>
-                <p className="text-orange-100 mt-2 text-sm sm:text-base md:text-lg">
+                <p className="text-orange-100 text-xs">
                   ¿Quieres agregar un combo para acompañar tu {arepaProduct?.nombre}?
                 </p>
               </div>
               <button
                 onClick={handleSkip}
-                className="text-white hover:text-orange-200 transition-colors p-2 rounded-full hover:bg-orange-600"
+                className="text-white hover:text-orange-200 transition-colors p-1 rounded-full hover:bg-orange-600"
               >
-                <XMarkIcon className="w-6 h-6 sm:w-8 sm:h-8" />
+                <XMarkIcon className="w-4 h-4" />
               </button>
             </div>
           </div>
 
           {/* Content scrolleable */}
-          <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-gray-50">
+          <div className="flex-1 overflow-y-auto p-2 bg-gray-50">
             {/* Combos disponibles */}
             {combosDisponibles.length > 0 ? (
-              <div className="max-w-6xl mx-auto">
-                <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 sm:mb-6">
+              <div>
+                <h3 className="text-sm font-semibold text-gray-800 mb-2">
                   Combos disponibles:
                 </h3>
                 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                <div className="grid grid-cols-1 gap-2">
                   {combosDisponibles.map((combo) => {
                     const imageUrl = getImageUrl(combo.imagen_url);
                     const isAddingThis = selectedCombo === combo.id && isAdding;
@@ -99,37 +101,32 @@ export default function ComboSuggestionModal({ isOpen, onClose, arepaProduct }) 
                     return (
                       <div
                         key={combo.id}
-                        className="bg-white rounded-3xl p-4 sm:p-6 border border-gray-200 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                        className="bg-white rounded-lg p-2 border border-gray-200 hover:shadow-md transition-all duration-300 flex items-center space-x-3"
                       >
-                        {/* Imagen del combo */}
+                        {/* Imagen del combo - Square */}
                         {imageUrl ? (
-                          <div className="h-40 sm:h-48 w-full bg-gray-200 rounded-2xl overflow-hidden mb-4">
+                          <div className="w-16 h-16 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
                             <img
                               src={imageUrl}
                               alt={combo.nombre}
-                              className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+                              className="w-full h-full object-cover"
                             />
                           </div>
                         ) : (
-                          <div className="h-40 sm:h-48 w-full bg-gradient-to-br from-orange-100 to-orange-200 rounded-2xl flex items-center justify-center mb-4">
+                          <div className="w-16 h-16 bg-gradient-to-br from-orange-100 to-orange-200 rounded-lg flex items-center justify-center flex-shrink-0">
                             <div className="text-center">
-                              <div className="text-4xl sm:text-5xl mb-2">🥤</div>
-                              <p className="text-sm text-orange-600 font-medium">{combo.nombre}</p>
+                              <div className="text-lg">🥤</div>
                             </div>
                           </div>
                         )}
                         
                         {/* Información del combo */}
-                        <div className="mb-4">
-                          <h4 className="font-bold text-lg sm:text-xl text-gray-900 mb-2 line-clamp-2">{combo.nombre}</h4>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-bold text-sm text-gray-900 truncate">{combo.nombre}</h4>
                           {combo.descripcion && (
-                            <p className="text-sm sm:text-base text-gray-600 line-clamp-3 leading-relaxed">{combo.descripcion}</p>
+                            <p className="text-xs text-gray-600 line-clamp-1">{combo.descripcion}</p>
                           )}
-                        </div>
-                        
-                        {/* Precio */}
-                        <div className="mb-4">
-                          <span className="text-2xl sm:text-3xl font-bold text-orange-600">
+                          <span className="text-sm font-bold text-orange-600">
                             Q{combo.precio?.toFixed(2)}
                           </span>
                         </div>
@@ -138,7 +135,7 @@ export default function ComboSuggestionModal({ isOpen, onClose, arepaProduct }) 
                         <button
                           onClick={() => handleAddCombo(combo)}
                           disabled={isAdding}
-                          className={`w-full py-3 sm:py-4 rounded-2xl font-medium transition-all duration-300 flex items-center justify-center space-x-2 transform hover:scale-105 active:scale-95 ${
+                          className={`px-3 py-1 rounded-md font-medium transition-all duration-300 flex items-center justify-center space-x-1 text-xs flex-shrink-0 ${
                             isAddingThis
                               ? 'bg-green-500 text-white'
                               : 'bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white'
@@ -146,12 +143,12 @@ export default function ComboSuggestionModal({ isOpen, onClose, arepaProduct }) 
                         >
                           {isAddingThis ? (
                             <>
-                              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                              <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                               <span>¡Agregado!</span>
                             </>
                           ) : (
                             <>
-                              <PlusIcon className="w-5 h-5" />
+                              <PlusIcon className="w-3 h-3" />
                               <span>Agregar</span>
                             </>
                           )}
@@ -162,32 +159,30 @@ export default function ComboSuggestionModal({ isOpen, onClose, arepaProduct }) 
                 </div>
               </div>
             ) : (
-              <div className="text-center py-12 sm:py-16">
-                <div className="text-6xl sm:text-8xl mb-6">😔</div>
-                <p className="text-lg sm:text-xl text-gray-600">No hay combos disponibles en este momento.</p>
+              <div className="text-center py-4">
+                <div className="text-2xl mb-2">😔</div>
+                <p className="text-sm text-gray-600">No hay combos disponibles en este momento.</p>
               </div>
             )}
           </div>
 
           {/* Footer con botones de acción */}
-          <div className="bg-white p-4 sm:p-6 border-t border-gray-200 flex-shrink-0 shadow-lg">
-            <div className="max-w-6xl mx-auto">
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+          <div className="bg-white p-2 border-t border-gray-200 flex-shrink-0">
+            <div className="flex gap-2">
+              <button
+                onClick={handleSkip}
+                className="flex-1 px-3 py-2 text-gray-600 border border-gray-300 rounded-md font-medium hover:bg-gray-50 transition-colors text-xs"
+              >
+                No, gracias
+              </button>
+              {combosDisponibles.length > 0 && (
                 <button
                   onClick={handleSkip}
-                  className="flex-1 px-6 py-3 sm:py-4 text-gray-600 border-2 border-gray-300 rounded-2xl font-medium hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 text-base sm:text-lg"
+                  className="flex-1 px-3 py-2 bg-gray-600 text-white rounded-md font-medium hover:bg-gray-700 transition-colors text-xs"
                 >
-                  No, gracias
+                  Continuar sin combo
                 </button>
-                {combosDisponibles.length > 0 && (
-                  <button
-                    onClick={handleSkip}
-                    className="flex-1 px-6 py-3 sm:py-4 bg-gradient-to-r from-gray-600 to-gray-700 text-white rounded-2xl font-medium hover:from-gray-700 hover:to-gray-800 transition-all duration-300 text-base sm:text-lg"
-                  >
-                    Continuar sin combo
-                  </button>
-                )}
-              </div>
+              )}
             </div>
           </div>
         </div>

@@ -2,9 +2,9 @@
 // CONFIGURACIÓN DE ENTORNOS
 // ========================================
 
-// 🔧 DESARROLLO (localhost)
+// 🔧 DESARROLLO (localhost) - AHORA TAMBIÉN USA LA API DE PRODUCCIÓN
 const DEVELOPMENT_CONFIG = {
-  API_BASE: "http://localhost/Pronto-delivery/api",
+  API_BASE: "https://prontodelivery.lat/api",
   ENVIRONMENT: "development"
 };
 

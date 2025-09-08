@@ -29,24 +29,24 @@ export default function Navbar() {
             <div className="flex items-center">
               <button
                 onClick={toggleMobileMenu}
-                className="p-2 sm:p-3 text-gray-700 hover:text-orange-600 transition-all duration-300 rounded-lg sm:rounded-xl hover:bg-orange-50 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                className="p-2 sm:p-3 text-gray-700 hover:text-orange-600 transition-colors duration-300 rounded-lg sm:rounded-xl hover:bg-orange-50"
               >
                 {isMobileMenuOpen ? (
-                  <XMarkIcon className="w-5 h-5 sm:w-6 sm:h-6 drop-shadow-md" />
+                  <XMarkIcon className="w-5 h-5 sm:w-6 sm:h-6" />
                 ) : (
-                  <Bars3Icon className="w-5 h-5 sm:w-6 sm:h-6 drop-shadow-md" />
+                  <Bars3Icon className="w-5 h-5 sm:w-6 sm:h-6" />
                 )}
               </button>
             </div>
 
             {/* Center: Logo and Restaurant Name */}
-            <Link to="/" className="flex items-center space-x-2 sm:space-x-3 transition-all duration-300 hover:scale-105 absolute left-1/2 transform -translate-x-1/2">
+            <Link to="/" className="flex items-center space-x-2 sm:space-x-3 transition-transform duration-300 hover:scale-105 absolute left-1/2 transform -translate-x-1/2">
               <img 
                 src={logo} 
                 alt="Logo LB Restaurant" 
-                className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-full object-cover border-2 border-orange-400 shadow-xl hover:shadow-2xl transition-all duration-300 drop-shadow-lg"
+                className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-full object-cover border-2 border-orange-400"
               />
-              <span className="text-base sm:text-lg lg:text-xl text-black drop-shadow-lg">
+              <span className="text-base sm:text-lg lg:text-xl text-black font-medium">
                 La Berraquera
               </span>
             </Link>
@@ -56,7 +56,7 @@ export default function Navbar() {
               {/* Botón para seleccionar/cambiar tienda */}
               <button
                 onClick={abrirModalCambio}
-                className={`relative px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-sm transition-all duration-300 rounded-lg sm:rounded-xl hover:shadow-xl transform hover:scale-105 shadow-lg group border ${
+                className={`relative px-3 py-2 sm:px-4 sm:py-2 text-xs sm:text-sm transition-colors duration-300 rounded-lg sm:rounded-xl border ${
                   tienda 
                     ? 'text-gray-700 hover:text-orange-600 hover:bg-orange-50 border-gray-200 hover:border-orange-200' 
                     : 'text-white bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 border-orange-500 animate-pulse'
@@ -76,11 +76,11 @@ export default function Navbar() {
               {/* Botón del carrito */}
               <button
                 onClick={toggleCart}
-                className="relative p-2 sm:p-3 text-gray-700 hover:text-orange-600 transition-all duration-300 rounded-lg sm:rounded-xl hover:bg-orange-50 hover:shadow-xl transform hover:scale-110 hover:rotate-3 shadow-lg cart-hover group"
+                className="relative p-2 sm:p-3 text-gray-700 hover:text-orange-600 transition-colors duration-300 rounded-lg sm:rounded-xl hover:bg-orange-50"
               >
-                <ShoppingBagIcon className="w-5 h-5 sm:w-6 sm:h-6 drop-shadow-md transition-all duration-300 cart-icon" />
+                <ShoppingBagIcon className="w-5 h-5 sm:w-6 sm:h-6" />
                 {cartItemsCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center shadow-xl drop-shadow-lg transition-all duration-300 cart-counter animate-bounce group-hover:animate-ping">
+                  <span className="absolute -top-1 -right-1 bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs rounded-full w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center">
                     {cartItemsCount > 99 ? '99+' : cartItemsCount}
                   </span>
                 )}

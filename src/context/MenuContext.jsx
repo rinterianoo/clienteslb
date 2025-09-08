@@ -80,11 +80,16 @@ export const MenuProvider = ({ children }) => {
       // El campo disponible indica si el producto está activo/disponible
       const disponible = producto.disponible;
       
-      if (!disponible) {
+      console.log('🍽️ MenuContext - Producto:', producto.nombre, 'Disponible:', disponible, 'Tipo:', typeof disponible);
+      
+      // Aceptar tanto boolean true como string "1" 
+      const estaDisponible = disponible === true || disponible === 1 || disponible === "1";
+      
+      if (!estaDisponible) {
         console.log('🍽️ MenuContext - Producto NO DISPONIBLE filtrado:', producto.nombre, 'Disponible:', disponible);
       }
       
-      return disponible === true;
+      return estaDisponible;
     });
     
     console.log('🍽️ MenuContext - Productos DISPONIBLES después del filtro:', resultado.length);

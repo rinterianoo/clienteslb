@@ -61,11 +61,7 @@ export default function EventsSection() {
               Sorprende a tus invitados con algo diferente,{" "}
               <span className="font-bold text-orange-600 bg-orange-50 px-2 py-1 rounded-lg flex items-center gap-2">
                 comida tradicional colombiana
-                <img 
-                  src={logo} 
-                  alt="La Berraquera Logo" 
-                  className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-orange-200"
-                />
+                
               </span>
             </p>
           </div>

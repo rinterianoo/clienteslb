@@ -63,17 +63,17 @@ export default function HomePage() {
           <div className="w-full max-w-7xl mx-auto">
             
             {/* Layout para móvil y desktop */}
-            <div className="flex flex-col lg:flex-row items-center justify-between min-h-screen lg:min-h-[80vh]">
+            <div className="flex flex-col lg:flex-row items-center justify-center lg:justify-between min-h-screen lg:min-h-[80vh]">
               
               {/* Contenido izquierdo - Texto */}
-              <div className="flex flex-col items-center lg:items-start justify-center lg:w-1/2 text-center lg:text-left pt-12 sm:pt-16 lg:pt-0">
+              <div className="flex flex-col items-center lg:items-start justify-center lg:w-1/2 text-center lg:text-left pt-0 sm:pt-0 lg:pt-0 min-h-screen lg:min-h-0">
                 {/* Mobile badge */}
                 <span className="text-white text-sm sm:text-lg lg:text-xl tracking-wider mb-4 sm:mb-6 drop-shadow-lg uppercase opacity-90 animate-fade-in-up animation-delay-200">
                    Abierto para envío y recogida
                 </span>
                 
-                {/* Mobile-optimized title */}
-                <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white drop-shadow-2xl mb-6 sm:mb-8 lg:mb-12 leading-none">
+                {/* Mobile-optimized title - Centered on mobile */}
+                <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-white drop-shadow-2xl mb-6 sm:mb-8 lg:mb-12 leading-none text-center lg:text-left">
                   <span className="inline-block animate-fade-in-up animation-delay-400">Comida</span>
                   <br />
                   <span className="inline-block animate-fade-in-up animation-delay-600">Tradicional</span>

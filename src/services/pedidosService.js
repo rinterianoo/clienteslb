@@ -82,13 +82,20 @@ export function calcularRecargoEnvio(subtotal) {
 export function formatearDatosParaAPI(cartItems, clienteData, metodoPago = "efectivo", tipoEntrega = "delivery", notas = "") {
   console.log('📝 Notas recibidas para el pedido:', notas);
   
-  const productos = cartItems.map(item => ({
-    id_producto: item.id || item._id || 1,
-    nombre: item.nombre,
-    precio: parseFloat(item.precio),
-    cantidad: parseInt(item.cantidad),
-    subtotal: parseFloat(item.precio * item.cantidad)
-  }));
+  const productos = cartItems.map(item => {
+    return {
+      id_producto: item.id || item._id || 1,
+      nombre: item.nombre, // Usar siempre el nombre original
+      precio: parseFloat(item.precio),
+      cantidad: parseInt(item.cantidad),
+      subtotal: parseFloat(item.precio * item.cantidad)
+    };
+  });
+
+  // Recopilar comentarios de productos con opciones especiales
+  const comentariosProductos = cartItems
+    .filter(item => item.comentario)
+    .map(item => item.comentario);
 
   const subtotal = productos.reduce((sum, producto) => sum + producto.subtotal, 0);
   const recargo = tipoEntrega === 'delivery' ? calcularRecargoEnvio(subtotal) : 0;
@@ -113,9 +120,19 @@ export function formatearDatosParaAPI(cartItems, clienteData, metodoPago = "efec
     tipo_entrega: tipoEntrega  // "delivery" o "pickup"
   };
 
-  // Agregar notas si están presentes
-  if (notas && notas.trim()) {
-    datosPedido.notas = notas.trim();
+  // Agregar notas si están presentes (usar "notas" en lugar de "comentarios")
+  let notasFinales = notas ? notas.trim() : '';
+  
+  // Agregar comentarios de productos con opciones especiales
+  if (comentariosProductos.length > 0) {
+    const comentariosTexto = comentariosProductos.join('; ');
+    notasFinales = notasFinales 
+      ? `${notasFinales}. ${comentariosTexto}` 
+      : comentariosTexto;
+  }
+  
+  if (notasFinales) {
+    datosPedido.notas = notasFinales; // Cambiar de 'comentarios' a 'notas'
   }
 
   // Agregar datos de facturación si están presentes
@@ -130,6 +147,35 @@ export function formatearDatosParaAPI(cartItems, clienteData, metodoPago = "efec
   // Debug: Mostrar datos finales
   console.log('🔍 DATOS FINALES PARA LA API:');
   console.log('📋 JSON enviado:', JSON.stringify(datosPedido, null, 2));
+  
+  if (comentariosProductos.length > 0) {
+    console.log('💬 Comentarios de productos encontrados:', comentariosProductos);
+    console.log('💬 Notas finales que se envían:', notasFinales);
+  } else {
+    console.log('⚠️ No se encontraron comentarios de productos en el carrito');
+  }
+
+  // Verificar que todos los campos requeridos estén presentes
+  console.log('✅ Verificación de campos requeridos:');
+  console.log('   - restaurant_id:', datosPedido.restaurant_id);
+  console.log('   - cliente:', !!datosPedido.cliente);
+  console.log('   - productos:', datosPedido.productos.length);
+  console.log('   - total:', datosPedido.total);
+  console.log('   - recargo:', datosPedido.recargo);
+  console.log('   - metodo_pago:', datosPedido.metodo_pago);
+  console.log('   - tipo_entrega:', datosPedido.tipo_entrega);
+  console.log('   - notas:', !!datosPedido.notas, datosPedido.notas || '(vacío)');
+  console.log('   - nit:', !!datosPedido.nit, datosPedido.nit || '(no especificado)');
+  console.log('   - nombre_factura:', !!datosPedido.nombre_factura, datosPedido.nombre_factura || '(no especificado)');
+
+  // Verificar cada item del carrito para debug
+  cartItems.forEach((item, index) => {
+    console.log(`🛒 Item ${index + 1}:`, {
+      nombre: item.nombre,
+      comentario: item.comentario,
+      tieneComentario: !!item.comentario
+    });
+  });
 
   return datosPedido;
 }

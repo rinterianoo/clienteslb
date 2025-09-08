@@ -12,6 +12,9 @@ export default function PedidosPage() {
   const [selectedCategory, setSelectedCategory] = useState('Todos');
   const [showFilters, setShowFilters] = useState(false);
 
+  console.log('🛍️ PedidosPage - Renderizando. Productos:', productos.length, 'Loading:', loading, 'Error:', error);
+  console.log('🛍️ PedidosPage - Productos completos:', productos);
+
   // Get unique categories
   const categories = ['Todos', ...new Set(productos.map(p => p.categoria).filter(Boolean))];
 
@@ -22,6 +25,8 @@ export default function PedidosPage() {
     const matchesCategory = selectedCategory === 'Todos' || producto.categoria === selectedCategory;
     return matchesSearch && matchesCategory;
   });
+
+  console.log('🛍️ PedidosPage - Productos filtrados:', filteredProducts.length, filteredProducts);
 
   if (loading) {
     return (
