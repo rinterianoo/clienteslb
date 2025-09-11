@@ -49,11 +49,7 @@ export default function MenuProductCard({ producto }) {
       // Verificar si es un producto de la categoría "arepa" para mostrar el modal de combos DESPUÉS de agregar
       if (producto.categoria && producto.categoria.toLowerCase().includes('arepa')) {
         // Primero agregar la arepa al carrito
-        const productoParaCarrito = {
-          ...producto,
-          cantidad: cantidad
-        };
-        addToCart(productoParaCarrito);
+        addToCart(producto, cantidad);
         // Luego mostrar el modal de combos
         setShowComboModal(true);
         openModal(comboModalId);
@@ -65,11 +61,7 @@ export default function MenuProductCard({ producto }) {
         return;
       }
       // Para otros productos que no son arepa ni bandeja paisa, agregar directamente
-      const productoParaCarrito = {
-        ...producto,
-        cantidad: cantidad
-      };
-      addToCart(productoParaCarrito);
+      addToCart(producto, cantidad);
       // Simular una pequeña pausa para mostrar el estado de "agregado"
       setTimeout(() => {
         setIsAdding(false);

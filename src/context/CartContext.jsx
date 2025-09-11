@@ -17,10 +17,21 @@ export function CartProvider({ children }) {
   }, [cartItems]);
   const addToCart = (producto, cantidad = 1) => {
     setCartItems(prevItems => {
-      const existingItem = prevItems.find(item => item._id === producto._id);
+      // Si el producto tiene comentario, tratarlo como un item único
+      if (producto.comentario) {
+        // Generar un ID único para productos con comentarios
+        const uniqueId = `${producto._id}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        return [...prevItems, { ...producto, _id: uniqueId, originalId: producto._id, cantidad }];
+      }
+      
+      // Para productos sin comentario, usar la lógica original
+      const existingItem = prevItems.find(item => 
+        item._id === producto._id && !item.comentario
+      );
+      
       if (existingItem) {
         return prevItems.map(item =>
-          item._id === producto._id
+          item._id === producto._id && !item.comentario
             ? { ...item, cantidad: item.cantidad + cantidad }
             : item
         );

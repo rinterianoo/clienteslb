@@ -133,6 +133,12 @@ export default function Cart() {
                         <h3 className="text-base sm:text-lg font-bold text-gray-900 truncate">
                           {item.nombre}
                         </h3>
+                        {/* Mostrar comentario si existe */}
+                        {item.comentario && (
+                          <p className="text-sm text-gray-600 mt-1 bg-blue-50 px-2 py-1 rounded-md">
+                            <span className="font-medium">Opción:</span> {item.comentario.replace('Opción seleccionada: ', '')}
+                          </p>
+                        )}
                         <p className="text-orange-600 font-bold text-lg">
                           Q{item.precio?.toFixed(2)}
                         </p>

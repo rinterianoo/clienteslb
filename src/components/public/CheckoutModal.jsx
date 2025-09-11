@@ -411,7 +411,30 @@ export default function CheckoutModal({ isOpen, onClose }) {
             {/* Resumen del Pedido */}
             <div className="bg-gray-50 rounded-xl p-4">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Resumen del Pedido</h3>
-              <div className="space-y-2 text-sm">
+              
+              {/* Detalle de productos */}
+              <div className="space-y-3 mb-4 max-h-32 overflow-y-auto">
+                {cartItems.map((item, idx) => (
+                  <div key={item._id || idx} className="flex justify-between items-start text-sm">
+                    <div className="flex-1">
+                      <span className="font-medium">{item.nombre}</span>
+                      {item.comentario && (
+                        <div className="text-xs text-blue-600 mt-1">
+                          {item.comentario.replace('Opción seleccionada: ', '')}
+                        </div>
+                      )}
+                      <div className="text-gray-500">
+                        {item.cantidad} x Q{item.precio?.toFixed(2)}
+                      </div>
+                    </div>
+                    <span className="font-medium">
+                      Q{((item.precio || 0) * (item.cantidad || 0)).toFixed(2)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="border-t pt-3 space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span>Subtotal:</span>
                   <span>Q{subtotal.toFixed(2)}</span>

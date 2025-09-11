@@ -50,13 +50,20 @@ export function calcularRecargoEnvio(subtotal) {
 // Función para formatear datos del carrito para la API
 export function formatearDatosParaAPI(cartItems, clienteData, metodoPago = "efectivo", tipoEntrega = "delivery", notas = "") {
   const productos = cartItems.map(item => {
-    return {
-      id_producto: item.id || item._id || 1,
+    const producto = {
+      id_producto: item.originalId || item.id || item._id || 1,
       nombre: item.nombre, // Usar siempre el nombre original
       precio: parseFloat(item.precio),
       cantidad: parseInt(item.cantidad),
       subtotal: parseFloat(item.precio * item.cantidad)
     };
+    
+    // Agregar comentario si existe
+    if (item.comentario) {
+      producto.comentario = item.comentario;
+    }
+    
+    return producto;
   });
   // Recopilar comentarios de productos con opciones especiales
   const comentariosProductos = cartItems
